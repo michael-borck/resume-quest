@@ -7,6 +7,7 @@
   achievements: 0,
   skillsInventory: [],
   currentCardIndex: 0,
+  previousDeck: null, // Track previous deck for returning from mini-games
 };
 
 // Card data
@@ -469,6 +470,7 @@ function resetGame() {
   gameState.achievements = 0;
   gameState.skillsInventory = [];
   gameState.currentCardIndex = 0;
+  gameState.previousDeck = null; // Reset previous deck tracking
 
   // Clear the card area
   cardArea.innerHTML = `
@@ -622,10 +624,8 @@ function createCard(index) {
     setupCardDragHandlers(card, cardData);
 }
 
-// Add console logs to debug the issue
+// Switch to a different card deck
 function switchDeck(deckName) {
-  //console.log(`Switching to deck: ${deckName}`);
-  
   // Check if the deck exists
   if (!cardDecks[deckName]) {
     console.error(`Deck "${deckName}" not found!`);
@@ -682,21 +682,6 @@ function updateDeckInfo() {
 
   deckName.textContent = deckDisplayName;
   currentDeckIcon.className = iconClass;
-  
-  //console.log(`Updated deck info: ${deckDisplayName}, icon class: ${iconClass}`);
-}
-
-// Switch to a different card deck
-function switchDeck(deckName) {
-  gameState.currentDeck = deckName;
-  gameState.currentCardIndex = 0;
-
-  // Clear all cards
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(card => card.remove());
-
-  // Create first card from new deck
-  createCard(0);
 }
 
 // Add a skill to inventory - modified to show only first letter
@@ -754,6 +739,9 @@ function showMiniGame(gameId) {
 
   if (!game) return;
 
+  // Save current deck before showing mini-game
+  gameState.previousDeck = gameState.currentDeck;
+  
   gameDescription.textContent = game.description;
   document.querySelector('.game-title').textContent = game.title;
 
@@ -767,6 +755,15 @@ function showMiniGame(gameId) {
       button.addEventListener('click', () => {
           option.result();
           hideMiniGame();
+          
+          // Return to previous deck after mini-game completes
+          // Use setTimeout to allow notifications to be visible
+          setTimeout(() => {
+              if (gameState.previousDeck) {
+                  switchDeck(gameState.previousDeck);
+                  gameState.previousDeck = null;
+              }
+          }, 1000);
       });
 
       gameButtons.appendChild(button);
