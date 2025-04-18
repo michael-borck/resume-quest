@@ -26,7 +26,10 @@
                 <div class="deck-icon" id="currentDeckIcon"></div>
                 <span id="deckName">Career Path</span>
             </div>
-            <div class="cards-left" id="cardsLeft">Cards: 20</div>
+            <div class="header-buttons">
+                <button class="help-btn" id="helpBtn">?</button>
+                <div class="cards-left" id="cardsLeft">Cards: 20</div>
+            </div>
         </div>
 
         <div class="stats-bar">
@@ -77,6 +80,65 @@
                 <button class="game-btn">Debug systematically</button>
                 <button class="game-btn">Ask for help</button>
                 <button class="game-btn">Try quick fixes</button>
+            </div>
+        </div>
+        
+        <!-- Help Screen -->
+        <div class="help-screen" id="helpScreen">
+            <div class="help-header">
+                <h3>QUEST MAP</h3>
+                <button class="close-btn" id="closeHelpBtn">×</button>
+            </div>
+            <div class="help-content">
+                <div class="quest-map">
+                    <div class="map-node main">
+                        <div class="node-label">Main Deck</div>
+                        <div class="node-icon">🧭</div>
+                    </div>
+                    <div class="map-branches">
+                        <div class="branch-group">
+                            <div class="branch-line"></div>
+                            <div class="map-node professional">
+                                <div class="node-label">Professional</div>
+                                <div class="node-icon">💼</div>
+                            </div>
+                            <div class="sub-branches">
+                                <div class="branch-line"></div>
+                                <div class="map-node work">
+                                    <div class="node-label">Work</div>
+                                    <div class="node-icon">👨‍💻</div>
+                                </div>
+                                <div class="map-node education">
+                                    <div class="node-label">Education</div>
+                                    <div class="node-icon">🎓</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="branch-group">
+                            <div class="branch-line"></div>
+                            <div class="map-node personal">
+                                <div class="node-label">Personal</div>
+                                <div class="node-icon">🧩</div>
+                            </div>
+                            <div class="sub-branches">
+                                <div class="branch-line"></div>
+                                <div class="map-node projects">
+                                    <div class="node-label">Projects</div>
+                                    <div class="node-icon">🛒</div>
+                                </div>
+                                <div class="map-node values">
+                                    <div class="node-label">Values</div>
+                                    <div class="node-icon">💡</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="help-instructions">
+                    <p>Swipe LEFT or RIGHT or click on choices to navigate through the cards.</p>
+                    <p>Each path reveals different aspects of Michael's journey.</p>
+                    <p>Mini-games will appear during your quest - choose wisely to gain skills and achievements!</p>
+                </div>
             </div>
         </div>
     </div>

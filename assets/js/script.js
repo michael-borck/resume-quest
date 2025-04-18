@@ -456,6 +456,9 @@ const gameDescription = document.getElementById('gameDescription');
 const gameButtons = document.getElementById('gameButtons');
 const swipeLeft = document.getElementById('swipeLeft');
 const swipeRight = document.getElementById('swipeRight');
+const helpBtn = document.getElementById('helpBtn');
+const helpScreen = document.getElementById('helpScreen');
+const closeHelpBtn = document.getElementById('closeHelpBtn');
 
 // Initialize game
 function initGame() {
@@ -481,9 +484,45 @@ function initGame() {
   contactBtn.addEventListener('click', () => {
       window.alert('Thank you for reviewing my resume! Please contact me at michael.borck@curtin.edu.au');
   });
+  
+  // Help button event listener
+  helpBtn.addEventListener('click', () => {
+      showHelpScreen();
+  });
+  
+  // Close help button event listener
+  closeHelpBtn.addEventListener('click', () => {
+      hideHelpScreen();
+  });
 
   // Update stats display
   updateStats();
+}
+
+// Show help screen
+function showHelpScreen() {
+    helpScreen.classList.add('show');
+    updateHelpMapHighlight();
+}
+
+// Update the highlighted node in the help screen map
+function updateHelpMapHighlight() {
+    // Highlight the current deck in the quest map
+    const mapNodes = document.querySelectorAll('.map-node');
+    mapNodes.forEach(node => {
+        // Remove any existing 'current' classes
+        node.classList.remove('current');
+        
+        // Add 'current' class to the node matching the current deck
+        if (node.classList.contains(gameState.currentDeck)) {
+            node.classList.add('current');
+        }
+    });
+}
+
+// Hide help screen
+function hideHelpScreen() {
+    helpScreen.classList.remove('show');
 }
 
 // Reset game state
@@ -802,6 +841,11 @@ function switchDeck(deckName) {
   // Update deck info with the new deck
   updateDeckInfo();
   
+  // If help screen is visible, update the highlighted node
+  if (helpScreen.classList.contains('show')) {
+    updateQuestMapHighlight();
+  }
+  
   // Create first card from new deck
   console.log(`Creating first card of ${deckName} deck`);
   createCard(0);
@@ -1033,6 +1077,35 @@ function showPersonalCard(valueType) {
     setupCardDragHandlers(card, cardData);
 }
 
+
+// Show help screen
+function showHelpScreen() {
+    // Update current position in quest map
+    updateQuestMapHighlight();
+    helpScreen.classList.add('show');
+}
+
+// Hide help screen
+function hideHelpScreen() {
+    helpScreen.classList.remove('show');
+}
+
+// Update the quest map to highlight the current position
+function updateQuestMapHighlight() {
+    // Remove current class from all nodes
+    document.querySelectorAll('.map-node').forEach(node => {
+        node.classList.remove('current');
+    });
+    
+    // Add current class to the node corresponding to the current deck
+    const currentDeckNode = document.querySelector(`.map-node.${gameState.currentDeck}`);
+    if (currentDeckNode) {
+        currentDeckNode.classList.add('current');
+    } else if (gameState.currentDeck === 'main') {
+        // Handle main deck separately (special case)
+        document.querySelector('.map-node.main').classList.add('current');
+    }
+}
 
 // Initialize the game when the page loads
 window.onload = initGame;
