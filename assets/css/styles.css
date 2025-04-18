@@ -633,6 +633,15 @@ body {
     padding: 0 15px;
 }
 
+.game-tip {
+    margin-top: 15px;
+    padding: 8px;
+    background-color: rgba(95, 255, 255, 0.1);
+    border: 1px dashed var(--primary-color);
+    color: var(--primary-color);
+    font-size: 8px;
+}
+
 /* Mobile responsive adjustments for help screen */
 @media (max-width: 400px) {
     .map-node {
