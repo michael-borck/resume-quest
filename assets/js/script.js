@@ -545,15 +545,31 @@ function setupCardDragHandlers(card, cardData) {
     const leftChoice = card.querySelector('.choice-left');
     const rightChoice = card.querySelector('.choice-right');
     
+    // Direct invocation functions for main card
+    function directLeftChoice() {
+        console.log("Direct left choice execution: going to Professional");
+        card.remove();
+        switchDeck('professional');
+        gameState.cardsLeft--;
+        updateStats();
+    }
+    
+    function directRightChoice() {
+        console.log("Direct right choice execution: going to Personal");
+        card.remove();
+        switchDeck('personal');
+        gameState.cardsLeft--;
+        updateStats();
+    }
+    
+    // Set up click handlers
     leftChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
-        console.log(`Left choice clicked on ${cardData.title}`);
+        console.log(`Left choice clicked on ${cardData.title} in ${gameState.currentDeck} deck`);
         
         // Special handling for main card to directly execute the action
-        if (cardData.title === 'Choose Your Path') {
-            cardData.leftResult(); // Go to professional directly
-            gameState.cardsLeft--;
-            updateStats();
+        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
+            directLeftChoice();
         } else {
             handleLeftChoice();
         }
@@ -561,13 +577,11 @@ function setupCardDragHandlers(card, cardData) {
     
     rightChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
-        console.log(`Right choice clicked on ${cardData.title}`);
+        console.log(`Right choice clicked on ${cardData.title} in ${gameState.currentDeck} deck`);
         
         // Special handling for main card to directly execute the action
-        if (cardData.title === 'Choose Your Path') {
-            cardData.rightResult(); // Go to personal directly
-            gameState.cardsLeft--;
-            updateStats();
+        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
+            directRightChoice();
         } else {
             handleRightChoice();
         }
