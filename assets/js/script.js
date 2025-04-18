@@ -501,6 +501,42 @@ function setupCardDragHandlers(card, cardData) {
     let startX = 0;
     let currentX = 0;
     let isDragging = false;
+    let isClick = false;
+    let clickStartTime = 0;
+    
+    // Add click handlers for the left and right choices
+    const leftChoice = card.querySelector('.choice-left');
+    const rightChoice = card.querySelector('.choice-right');
+    
+    leftChoice.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent card click event
+        handleLeftChoice();
+    });
+    
+    rightChoice.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent card click event
+        handleRightChoice();
+    });
+    
+    function handleLeftChoice() {
+        card.classList.add('swiping-left');
+        setTimeout(() => {
+            card.remove();
+            cardData.leftResult();
+            gameState.cardsLeft--;
+            updateStats();
+        }, 300);
+    }
+    
+    function handleRightChoice() {
+        card.classList.add('swiping-right');
+        setTimeout(() => {
+            card.remove();
+            cardData.rightResult();
+            gameState.cardsLeft--;
+            updateStats();
+        }, 300);
+    }
     
     card.addEventListener('mousedown', startDrag);
     card.addEventListener('touchstart', startDrag);
@@ -513,6 +549,8 @@ function setupCardDragHandlers(card, cardData) {
     
     function startDrag(e) {
         isDragging = true;
+        isClick = true;
+        clickStartTime = Date.now();
         startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
         card.classList.add('dragging');
     }
@@ -523,6 +561,11 @@ function setupCardDragHandlers(card, cardData) {
         e.preventDefault();
         currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
         const diffX = currentX - startX;
+        
+        // If dragged more than 10px, it's not a click
+        if (Math.abs(diffX) > 10) {
+            isClick = false;
+        }
         
         card.style.transform = `translateX(${diffX}px) rotate(${diffX * 0.05}deg)`;
         
@@ -544,6 +587,7 @@ function setupCardDragHandlers(card, cardData) {
         isDragging = false;
         
         const diffX = currentX - startX;
+        const clickDuration = Date.now() - clickStartTime;
         
         // Reset swipe indicators
         swipeLeft.style.opacity = '0';
@@ -551,22 +595,10 @@ function setupCardDragHandlers(card, cardData) {
         
         if (diffX < -100) {
             // Swipe left
-            card.classList.add('swiping-left');
-            setTimeout(() => {
-                card.remove();
-                cardData.leftResult();
-                gameState.cardsLeft--;
-                updateStats();
-            }, 300);
+            handleLeftChoice();
         } else if (diffX > 100) {
             // Swipe right
-            card.classList.add('swiping-right');
-            setTimeout(() => {
-                card.remove();
-                cardData.rightResult();
-                gameState.cardsLeft--;
-                updateStats();
-            }, 300);
+            handleRightChoice();
         } else {
             // Return to center
             card.style.transform = '';
