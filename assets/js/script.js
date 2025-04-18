@@ -62,7 +62,7 @@ const cardDecks = {
               increaseStats(1, 2, 1);
               // Move to the next card after skill is added
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -81,18 +81,12 @@ const cardDecks = {
           leftResult: function() {
               addSkill('React');
               increaseStats(1, 1, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
-              }, 1000);
+              // Don't manipulate the index here - it's now handled in handleLeftChoice
           },
           rightResult: function() {
               addSkill('UX Design');
               increaseStats(1, 1, 1);
-              // Move to the next card
-              setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
-              }, 1000);
+              // Don't manipulate the index here - it's now handled in handleRightChoice
           }
       },
       {
@@ -105,10 +99,7 @@ const cardDecks = {
           leftResult: function() {
               addSkill('MongoDB');
               increaseStats(1, 1, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
-              }, 1000);
+              // Don't manipulate the index here - it's now handled in handleLeftChoice
           },
           rightResult: function() {
               addSkill('Node.js');
@@ -151,7 +142,7 @@ const cardDecks = {
               increaseStats(1, 0, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -159,7 +150,7 @@ const cardDecks = {
               increaseStats(1, 1, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           }
       },
@@ -175,7 +166,7 @@ const cardDecks = {
               increaseStats(1, 0, 1);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -196,7 +187,7 @@ const cardDecks = {
               showNotification('Achievement unlocked: Cloud Expert!');
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -204,7 +195,7 @@ const cardDecks = {
               increaseStats(1, 0, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           }
       },
@@ -242,7 +233,7 @@ const cardDecks = {
               increaseStats(1, 0, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -263,7 +254,7 @@ const cardDecks = {
               increaseStats(1, 0, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           },
           rightResult: function() {
@@ -271,7 +262,7 @@ const cardDecks = {
               increaseStats(1, 0, 0);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           }
       },
@@ -292,7 +283,7 @@ const cardDecks = {
               increaseStats(1, 0, 1);
               // Move to the next card
               setTimeout(() => {
-                  createCard(gameState.currentCardIndex + 1);
+                  // Auto-handled by handleLeftChoice or handleRightChoice;
               }, 1000);
           }
       },
@@ -593,12 +584,28 @@ function setupCardDragHandlers(card, cardData) {
         setTimeout(() => {
             card.remove();
             console.log(`Executing left result for ${cardData.title}`);
+            
+            // Increment the currentCardIndex BEFORE executing the result
+            // This is to ensure the next card references work correctly
+            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
+                gameState.currentCardIndex++;
+                console.log(`Incremented index to ${gameState.currentCardIndex} before left result`);
+            }
+            
             cardData.leftResult();
             gameState.cardsLeft--;
             updateStats();
             
             // Debug after left result
             console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
+            
+            // If no transition happened in leftResult, create next card
+            if (document.querySelectorAll('.card').length === 0) {
+                console.log("No cards found after left result - creating next card");
+                if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
+                    createCard(gameState.currentCardIndex);
+                }
+            }
         }, 300);
     }
     
@@ -607,12 +614,28 @@ function setupCardDragHandlers(card, cardData) {
         setTimeout(() => {
             card.remove();
             console.log(`Executing right result for ${cardData.title}`);
+            
+            // Increment the currentCardIndex BEFORE executing the result
+            // This is to ensure the next card references work correctly
+            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
+                gameState.currentCardIndex++;
+                console.log(`Incremented index to ${gameState.currentCardIndex} before right result`);
+            }
+            
             cardData.rightResult();
             gameState.cardsLeft--;
             updateStats();
             
             // Debug after right result
             console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
+            
+            // If no transition happened in rightResult, create next card
+            if (document.querySelectorAll('.card').length === 0) {
+                console.log("No cards found after right result - creating next card");
+                if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
+                    createCard(gameState.currentCardIndex);
+                }
+            }
         }, 300);
     }
     
