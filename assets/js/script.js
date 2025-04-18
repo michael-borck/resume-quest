@@ -929,36 +929,36 @@ const gameState = {
       }
     };
 
-// Clear any existing cards
-const cards = document.querySelectorAll('.card');
-cards.forEach(card => card.remove());
-
-// Set the current deck to personal for proper UI display
-gameState.currentDeck = 'personal';
-updateDeckInfo();
-
-// Create and show the personal value card
-const cardData = personalCards[valueType];
-const card = document.createElement('div');
-card.classList.add('card', 'personal');
-
-card.innerHTML = `
-  <div class="card-header">${cardData.title}</div>
-  <div class="card-content">
-    <div class="card-icon">${cardData.icon}</div>
-    <div class="card-text">${cardData.text}</div>
-    <div class="card-choices">
-      <div class="choice-left">${cardData.leftChoice}</div>
-      <div class="choice-right">${cardData.rightChoice}</div>
-    </div>
-  </div>
-`;
-
-cardArea.appendChild(card);
-
-// Set up drag handling using the shared function
-setupCardDragHandlers(card, cardData);
-}
+    // Clear any existing cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => card.remove());
+    
+    // Set the current deck to personal for proper UI display
+    gameState.currentDeck = 'personal';
+    updateDeckInfo();
+    
+    // Create and show the personal value card
+    const cardData = personalCards[valueType];
+    const card = document.createElement('div');
+    card.classList.add('card', 'personal');
+    
+    card.innerHTML = `
+      <div class="card-header">${cardData.title}</div>
+      <div class="card-content">
+        <div class="card-icon">${cardData.icon}</div>
+        <div class="card-text">${cardData.text}</div>
+        <div class="card-choices">
+          <div class="choice-left">${cardData.leftChoice}</div>
+          <div class="choice-right">${cardData.rightChoice}</div>
+        </div>
+      </div>
+    `;
+    
+    cardArea.appendChild(card);
+    
+    // Set up drag handling using the shared function
+    setupCardDragHandlers(card, cardData);
+  }
 
 // Initialize the game when the page loads
 window.onload = initGame;
