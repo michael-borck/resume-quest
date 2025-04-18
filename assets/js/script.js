@@ -115,6 +115,8 @@ const cardDecks = {
               addSkill('Microservices');
               increaseStats(1, 0, 1);
               showNotification('Achievement unlocked: System Architect!');
+              // We manually switch to main deck - disable automatic next card creation
+              document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
               // Switch to main deck after showing achievement
               setTimeout(() => {
                   switchDeck('main');
@@ -191,6 +193,8 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Distributed Systems');
               increaseStats(1, 0, 1);
+              // We manually switch to main deck - disable automatic next card creation
+              document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
               // Switch to main deck after showing achievement
               setTimeout(() => {
                   switchDeck('main');
@@ -268,6 +272,8 @@ const cardDecks = {
               addSkill('Open Source');
               increaseStats(1, 0, 1);
               showNotification('Achievement unlocked: Community Contributor!');
+              // We manually switch to main deck - disable automatic next card creation
+              document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
               // Switch to main deck after showing achievement
               setTimeout(() => {
                   switchDeck('main');
@@ -570,7 +576,9 @@ function setupCardDragHandlers(card, cardData) {
             console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
             
             // If no transition happened in leftResult, create next card
-            if (document.querySelectorAll('.card').length === 0) {
+            // Skip if we've marked cards as temp (used for cards that handle their own transitions)
+            if (document.querySelectorAll('.card').length === 0 && 
+                document.querySelectorAll('.temp-card').length === 0) {
                 console.log("No cards found after left result - creating next card");
                 if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
                     createCard(gameState.currentCardIndex);
@@ -600,7 +608,9 @@ function setupCardDragHandlers(card, cardData) {
             console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
             
             // If no transition happened in rightResult, create next card
-            if (document.querySelectorAll('.card').length === 0) {
+            // Skip if we've marked cards as temp (used for cards that handle their own transitions)
+            if (document.querySelectorAll('.card').length === 0 && 
+                document.querySelectorAll('.temp-card').length === 0) {
                 console.log("No cards found after right result - creating next card");
                 if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
                     createCard(gameState.currentCardIndex);
