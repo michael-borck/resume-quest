@@ -568,17 +568,23 @@ function setupCardDragHandlers(card, cardData) {
     let isClick = false;
     let clickStartTime = 0;
     
+    // Debug info - show what card we're on
+    console.log(`Setting up handlers for card: ${cardData.title}`);
+    console.log(`Current deck: ${gameState.currentDeck}, Current index: ${gameState.currentCardIndex}`);
+    
     // Add click handlers for the left and right choices
     const leftChoice = card.querySelector('.choice-left');
     const rightChoice = card.querySelector('.choice-right');
     
     leftChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
+        console.log(`Left choice clicked on ${cardData.title}`);
         handleLeftChoice();
     });
     
     rightChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
+        console.log(`Right choice clicked on ${cardData.title}`);
         handleRightChoice();
     });
     
@@ -586,9 +592,13 @@ function setupCardDragHandlers(card, cardData) {
         card.classList.add('swiping-left');
         setTimeout(() => {
             card.remove();
+            console.log(`Executing left result for ${cardData.title}`);
             cardData.leftResult();
             gameState.cardsLeft--;
             updateStats();
+            
+            // Debug after left result
+            console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
         }, 300);
     }
     
@@ -596,9 +606,13 @@ function setupCardDragHandlers(card, cardData) {
         card.classList.add('swiping-right');
         setTimeout(() => {
             card.remove();
+            console.log(`Executing right result for ${cardData.title}`);
             cardData.rightResult();
             gameState.cardsLeft--;
             updateStats();
+            
+            // Debug after right result
+            console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
         }, 300);
     }
     
@@ -674,6 +688,7 @@ function setupCardDragHandlers(card, cardData) {
 
 // Create a new card
 function createCard(index) {
+    console.log(`Creating card with index: ${index}`);
     const deck = cardDecks[gameState.currentDeck];
     
     if (!deck) {
@@ -683,13 +698,17 @@ function createCard(index) {
 
     // Update the current card index
     gameState.currentCardIndex = index;
+    console.log(`Updated current index to: ${gameState.currentCardIndex}`);
 
     if (index >= deck.length) {
+        console.log(`Index ${index} is >= deck.length ${deck.length}`);
         // End of current deck
         if (gameState.currentDeck !== 'main') {
+            console.log(`Switching to main deck from ${gameState.currentDeck}`);
             switchDeck('main');
             return;
         } else if (gameState.cardsLeft <= 0) {
+            console.log('Game over - no cards left');
             // Game over
             showGameOver();
             return;
@@ -700,6 +719,8 @@ function createCard(index) {
     updateDeckInfo();
 
     const cardData = deck[index];
+    console.log(`Card data loaded: ${cardData.title}`);
+    console.log(`Left choice: ${cardData.leftChoice}, Right choice: ${cardData.rightChoice}`);
 
     // Create card element
     const card = document.createElement('div');
@@ -725,6 +746,8 @@ function createCard(index) {
 
 // Switch to a different card deck
 function switchDeck(deckName) {
+  console.log(`Switching deck from ${gameState.currentDeck} to ${deckName}`);
+  
   // Check if the deck exists
   if (!cardDecks[deckName]) {
     console.error(`Deck "${deckName}" not found!`);
@@ -733,6 +756,7 @@ function switchDeck(deckName) {
   
   gameState.currentDeck = deckName;
   gameState.currentCardIndex = 0;
+  console.log(`Reset currentCardIndex to 0 for new deck`);
 
   // Clear all cards
   const cards = document.querySelectorAll('.card');
@@ -742,6 +766,7 @@ function switchDeck(deckName) {
   updateDeckInfo();
   
   // Create first card from new deck
+  console.log(`Creating first card of ${deckName} deck`);
   createCard(0);
 }
 
