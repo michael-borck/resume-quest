@@ -162,7 +162,8 @@ const cardDecks = {
           rightResult: function() {
               addSkill('TensorFlow');
               increaseStats(1, 0, 0);
-              showMiniGame('mlChallenge');
+              // Use the skillAssessment minigame for ML challenge 
+              showMiniGame('skillAssessment');
           }
       },
       {
@@ -253,7 +254,8 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Python');
               increaseStats(1, 0, 0);
-              showMiniGame('aiChallenge');
+              // Use the ecommerceFeature minigame as a substitute for AI challenge
+              showMiniGame('ecommerceFeature');
           },
           rightResult: function() {
               addSkill('Product Design');
