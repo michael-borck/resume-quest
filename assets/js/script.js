@@ -487,7 +487,7 @@ function initGame() {
 
   // Contact button (would typically link to contact info)
   contactBtn.addEventListener('click', () => {
-      window.alert('Thank you for reviewing my resume! Please contact me at email@example.com');
+      window.alert('Thank you for reviewing my resume! Please contact me at michael.borck@curtin.edu.au');
   });
 
   // Update stats display
@@ -756,16 +756,26 @@ function switchDeck(deckName) {
   // Check if the deck exists
   if (!cardDecks[deckName]) {
     console.error(`Deck "${deckName}" not found!`);
+    showNotification('Error loading deck');
     return;
   }
+  
+  // Check if the deck has cards
+  if (!cardDecks[deckName] || cardDecks[deckName].length === 0) {
+    console.error(`Deck "${deckName}" has no cards!`);
+    showNotification('Error loading deck');
+    return;
+  }
+  
+  // Clear all UI elements that might be persisting
+  document.querySelectorAll('.temp-card').forEach(card => card.remove());
+  document.querySelectorAll('.card').forEach(card => card.remove());
+  swipeLeft.style.opacity = '0';
+  swipeRight.style.opacity = '0';
   
   gameState.currentDeck = deckName;
   gameState.currentCardIndex = 0;
   console.log(`Reset currentCardIndex to 0 for new deck`);
-
-  // Clear all cards
-  const cards = document.querySelectorAll('.card');
-  cards.forEach(card => card.remove());
 
   // Update deck info with the new deck
   updateDeckInfo();
@@ -815,6 +825,7 @@ function updateDeckInfo() {
 
 // Add a skill to inventory - modified to show only first letter
 function addSkill(skillName) {
+  // Don't add duplicate skills or show notification if already acquired
   if (gameState.skillsInventory.includes(skillName)) {
       return;
   }
@@ -866,7 +877,11 @@ function showGameOver() {
 function showMiniGame(gameId) {
   const game = miniGames[gameId];
 
-  if (!game) return;
+  if (!game) {
+    console.error(`Mini-game "${gameId}" not found!`);
+    showNotification('Could not load mini-game');
+    return;
+  }
 
   // Save current deck before showing mini-game
   gameState.previousDeck = gameState.currentDeck;
@@ -920,6 +935,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael\'s creativity shines in both work and hobbies!');
+                // We manually switch to projects deck - disable automatic next card creation
+                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
                 setTimeout(() => {
                     switchDeck('projects');
                 }, 1000);
@@ -937,6 +954,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael has led multiple successful team projects!');
+                // We manually switch to work deck - disable automatic next card creation
+                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
                 setTimeout(() => {
                     switchDeck('work');
                 }, 1000);
@@ -954,6 +973,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael dedicates time every week to learning!');
+                // We manually switch to education deck - disable automatic next card creation
+                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
                 setTimeout(() => {
                     switchDeck('education');
                 }, 1000);
