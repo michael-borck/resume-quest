@@ -920,8 +920,7 @@ const gameState = {
         rightResult: function() {
           switchDeck('main');
         }
-    }
-};
+    };
 
 // Clear any existing cards
 const cards = document.querySelectorAll('.card');
