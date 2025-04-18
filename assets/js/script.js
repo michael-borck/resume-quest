@@ -860,6 +860,12 @@ const gameState = {
           }
         }
       });
+      
+      gameButtons.appendChild(button);
+    });
+    
+    miniGame.classList.add('show');
+  }
   
   // Hide mini-game
   function hideMiniGame() {
