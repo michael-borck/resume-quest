@@ -60,10 +60,7 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Leadership');
               increaseStats(1, 2, 1);
-              // Move to the next card after skill is added
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('CI/CD');
@@ -140,18 +137,12 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Algorithms');
               increaseStats(1, 0, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('Software Design');
               increaseStats(1, 1, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           }
       },
       {
@@ -164,10 +155,7 @@ const cardDecks = {
           leftResult: function() {
               addSkill('AWS');
               increaseStats(1, 0, 1);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('TensorFlow');
@@ -185,18 +173,12 @@ const cardDecks = {
           leftResult: function() {
               increaseStats(0, 1, 1);
               showNotification('Achievement unlocked: Cloud Expert!');
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('GCP');
               increaseStats(1, 0, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           }
       },
       {
@@ -231,10 +213,7 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Full-Stack');
               increaseStats(1, 0, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('UI/UX');
@@ -252,18 +231,12 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Data Viz');
               increaseStats(1, 0, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           },
           rightResult: function() {
               addSkill('Flutter');
               increaseStats(1, 0, 0);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           }
       },
       {
@@ -281,10 +254,7 @@ const cardDecks = {
           rightResult: function() {
               addSkill('Product Design');
               increaseStats(1, 0, 1);
-              // Move to the next card
-              setTimeout(() => {
-                  // Auto-handled by handleLeftChoice or handleRightChoice;
-              }, 1000);
+              // No setTimeout needed - next card is handled automatically
           }
       },
       {
