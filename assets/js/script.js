@@ -548,13 +548,29 @@ function setupCardDragHandlers(card, cardData) {
     leftChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Left choice clicked on ${cardData.title}`);
-        handleLeftChoice();
+        
+        // Special handling for main card to directly execute the action
+        if (cardData.title === 'Choose Your Path') {
+            cardData.leftResult(); // Go to professional directly
+            gameState.cardsLeft--;
+            updateStats();
+        } else {
+            handleLeftChoice();
+        }
     });
     
     rightChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Right choice clicked on ${cardData.title}`);
-        handleRightChoice();
+        
+        // Special handling for main card to directly execute the action
+        if (cardData.title === 'Choose Your Path') {
+            cardData.rightResult(); // Go to personal directly
+            gameState.cardsLeft--;
+            updateStats();
+        } else {
+            handleRightChoice();
+        }
     });
     
     function handleLeftChoice() {
@@ -573,6 +589,12 @@ function setupCardDragHandlers(card, cardData) {
             cardData.leftResult();
             gameState.cardsLeft--;
             updateStats();
+            
+            // Check if game should end after this move
+            if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
+                showGameOver();
+                return;
+            }
             
             // Debug after left result
             console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
@@ -605,6 +627,12 @@ function setupCardDragHandlers(card, cardData) {
             cardData.rightResult();
             gameState.cardsLeft--;
             updateStats();
+            
+            // Check if game should end after this move
+            if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
+                showGameOver();
+                return;
+            }
             
             // Debug after right result
             console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
