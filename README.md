@@ -24,6 +24,24 @@ This playful approach lets you experience my qualifications at your own pace whi
 4. **Explore all paths** to discover the full story
 5. The quest ends after 20 card interactions
 
+## 8-Bit Design Philosophy
+
+Resume Quest deliberately embraces classic 8-bit game design philosophies:
+
+- **Intentional "Clunkiness"**: Some UI elements aren't immediately obvious, encouraging experimentation and discovery. This reflects the era when games didn't explain everything upfront.
+
+- **Exploration Over Instruction**: Like classic adventure games, the pleasure comes from discovering paths and connections rather than following explicit instructions.
+
+- **Learning Through Play**: Game mechanics reveal themselves through interaction rather than lengthy tutorials, rewarding curiosity and experimentation.
+
+- **Meaningful Ambiguity**: Some elements (like the "Cards" counter) have deliberate ambiguity, echoing how early games created mystery through limited UI space.
+
+- **Visual Simplicity, Systemic Depth**: The pixelated visuals and simple controls hide a complex interconnected network of career paths and choices.
+
+- **Rewarding Persistence**: Complete understanding of the game structure only comes through multiple playthroughs, encouraging revisits to discover all paths.
+
+These design choices aim to create not just a resume but an experience that feels like discovering a forgotten gem from gaming's golden era—where figuring out the game was part of the fun.
+
 ## Quest Map
 
 Below is a map of the possible pathways through Resume Quest to help guide your journey:
