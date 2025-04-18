@@ -537,52 +537,17 @@ function setupCardDragHandlers(card, cardData) {
     const leftChoice = card.querySelector('.choice-left');
     const rightChoice = card.querySelector('.choice-right');
     
-    // Direct invocation functions for main card
-    function directLeftChoice() {
-        console.log("Direct left choice execution: going to Professional");
-        // Simply remove the card and switch deck
-        card.remove();
-        
-        // Switch deck directly
-        switchDeck('professional');
-        gameState.cardsLeft--;
-        updateStats();
-    }
-    
-    function directRightChoice() {
-        console.log("Direct right choice execution: going to Personal");
-        // Simply remove the card and switch deck
-        card.remove();
-        
-        // Switch deck directly
-        switchDeck('personal');
-        gameState.cardsLeft--;
-        updateStats();
-    }
-    
     // Set up click handlers
     leftChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Left choice clicked on ${cardData.title} in ${gameState.currentDeck} deck`);
-        
-        // Special handling for main card to directly execute the action
-        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
-            directLeftChoice();
-        } else {
-            handleLeftChoice();
-        }
+        handleLeftChoice();
     });
     
     rightChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Right choice clicked on ${cardData.title} in ${gameState.currentDeck} deck`);
-        
-        // Special handling for main card to directly execute the action
-        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
-            directRightChoice();
-        } else {
-            handleRightChoice();
-        }
+        handleRightChoice();
     });
     
     function handleLeftChoice() {
@@ -590,6 +555,15 @@ function setupCardDragHandlers(card, cardData) {
         
         // Remove the card immediately without animation
         card.remove();
+        
+        // Special handling for main card to ensure consistent behavior
+        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
+            console.log("Special handling for main card left choice - going to Professional");
+            switchDeck('professional');
+            gameState.cardsLeft--;
+            updateStats();
+            return;
+        }
         
         // Increment the currentCardIndex BEFORE executing the result
         // This is to ensure the next card references work correctly
@@ -629,6 +603,15 @@ function setupCardDragHandlers(card, cardData) {
         // Remove the card immediately without animation
         card.remove();
         
+        // Special handling for main card to ensure consistent behavior
+        if (gameState.currentDeck === 'main' && cardData.title === 'Choose Your Path') {
+            console.log("Special handling for main card right choice - going to Personal");
+            switchDeck('personal');
+            gameState.cardsLeft--;
+            updateStats();
+            return;
+        }
+        
         // Increment the currentCardIndex BEFORE executing the result
         // This is to ensure the next card references work correctly
         if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
@@ -665,7 +648,7 @@ function setupCardDragHandlers(card, cardData) {
     card.addEventListener('touchstart', startDrag);
     
     document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag);
+    document.addEventListener('touchmove', drag, { passive: false });
     
     document.addEventListener('mouseup', endDrag);
     document.addEventListener('touchend', endDrag);
