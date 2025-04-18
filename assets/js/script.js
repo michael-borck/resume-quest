@@ -681,6 +681,9 @@ function createCard(index) {
         return;
     }
 
+    // Update the current card index
+    gameState.currentCardIndex = index;
+
     if (index >= deck.length) {
         // End of current deck
         if (gameState.currentDeck !== 'main') {
