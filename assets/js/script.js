@@ -60,6 +60,10 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Leadership');
               increaseStats(1, 2, 1);
+              // Move to the next card after skill is added
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('CI/CD');
@@ -77,10 +81,18 @@ const cardDecks = {
           leftResult: function() {
               addSkill('React');
               increaseStats(1, 1, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('UX Design');
               increaseStats(1, 1, 1);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           }
       },
       {
@@ -93,6 +105,10 @@ const cardDecks = {
           leftResult: function() {
               addSkill('MongoDB');
               increaseStats(1, 1, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('Node.js');
@@ -111,6 +127,10 @@ const cardDecks = {
               addSkill('Microservices');
               increaseStats(1, 0, 1);
               showNotification('Achievement unlocked: System Architect!');
+              // Switch to main deck after showing achievement
+              setTimeout(() => {
+                  switchDeck('main');
+              }, 2000);
           },
           rightResult: function() {
               switchDeck('main');
@@ -129,10 +149,18 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Algorithms');
               increaseStats(1, 0, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('Software Design');
               increaseStats(1, 1, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           }
       },
       {
@@ -145,6 +173,10 @@ const cardDecks = {
           leftResult: function() {
               addSkill('AWS');
               increaseStats(1, 0, 1);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('TensorFlow');
@@ -162,10 +194,18 @@ const cardDecks = {
           leftResult: function() {
               increaseStats(0, 1, 1);
               showNotification('Achievement unlocked: Cloud Expert!');
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('GCP');
               increaseStats(1, 0, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           }
       },
       {
@@ -178,6 +218,10 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Distributed Systems');
               increaseStats(1, 0, 1);
+              // Switch to main deck after showing achievement
+              setTimeout(() => {
+                  switchDeck('main');
+              }, 1000);
           },
           rightResult: function() {
               switchDeck('main');
@@ -196,6 +240,10 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Full-Stack');
               increaseStats(1, 0, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('UI/UX');
@@ -213,10 +261,18 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Data Viz');
               increaseStats(1, 0, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           },
           rightResult: function() {
               addSkill('Flutter');
               increaseStats(1, 0, 0);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           }
       },
       {
@@ -234,6 +290,10 @@ const cardDecks = {
           rightResult: function() {
               addSkill('Product Design');
               increaseStats(1, 0, 1);
+              // Move to the next card
+              setTimeout(() => {
+                  createCard(gameState.currentCardIndex + 1);
+              }, 1000);
           }
       },
       {
@@ -247,6 +307,10 @@ const cardDecks = {
               addSkill('Open Source');
               increaseStats(1, 0, 1);
               showNotification('Achievement unlocked: Community Contributor!');
+              // Switch to main deck after showing achievement
+              setTimeout(() => {
+                  switchDeck('main');
+              }, 2000);
           },
           rightResult: function() {
               switchDeck('main');
