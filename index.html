@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Quest</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Landing/Story Screen -->
+        <div class="story-screen" id="storyScreen">
+            <div class="story-content">
+                <h1 style="margin-bottom: 20px; color: var(--primary-color);">RESUME QUEST</h1>
+                <p>You stumble into what appears to be an ancient library filled with magical cards. The dusty air shimmers with possibility.</p>
+                <p style="margin-top: 15px;">The mysterious Keeper of Records approaches:</p>
+                <p style="margin-top: 15px; color: var(--secondary-color);">"These cards contain the journey of a skilled adventurer named Michael. Swipe through them to unveil his tale of knowledge, challenges, and creations."</p>
+                <p style="margin-top: 15px;">Do you dare to discover the path of this mysterious traveler?</p>
+            </div>
+            <button class="start-btn" id="startBtn">BEGIN THE QUEST</button>
+        </div>
+
+        <!-- Game UI -->
+        <div class="game-header">
+            <div class="deck-info">
+                <div class="deck-icon" id="currentDeckIcon"></div>
+                <span id="deckName">Career Path</span>
+            </div>
+            <div class="cards-left" id="cardsLeft">Cards: 20</div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat">
+                <div>🧠 SKILLS</div>
+                <div class="stat-value" id="skillStat">0</div>
+            </div>
+            <div class="stat">
+                <div>💼 EXP</div>
+                <div class="stat-value" id="expStat">0</div>
+            </div>
+            <div class="stat">
+                <div>🏆 ACHIEVE</div>
+                <div class="stat-value" id="achieveStat">0</div>
+            </div>
+        </div>
+
+        <div class="card-area" id="cardArea">
+            <!-- Cards will be generated here -->
+
+            <div class="swipe-indicator swipe-left" id="swipeLeft">◀</div>
+            <div class="swipe-indicator swipe-right" id="swipeRight">▶</div>
+        </div>
+
+        <div class="inventory" id="inventory">
+            <!-- Skill icons will be added here -->
+        </div>
+
+        <div class="notification" id="notification">Skill unlocked: JavaScript!</div>
+
+        <!-- Game Over Screen -->
+        <div class="game-over" id="gameOver">
+            <h2 style="color: var(--primary-color); margin-bottom: 20px;">JOURNEY COMPLETE</h2>
+            <p>You've discovered the complete story of Michael's professional adventure!</p>
+            <p style="margin-top: 15px;">Skills Mastered: <span id="finalSkills">10</span></p>
+            <p>Experience Gained: <span id="finalExp">20</span></p>
+            <p>Achievements Unlocked: <span id="finalAchieve">5</span></p>
+            <p style="margin-top: 15px; color: var(--secondary-color);">Would you like to meet this adventurer in person?</p>
+            <button class="restart-btn" id="contactBtn">CONTACT MICHAEL</button>
+            <button class="restart-btn" id="restartBtn" style="background-color: #444;">RESTART JOURNEY</button>
+        </div>
+
+        <!-- Mini-game Interface -->
+        <div class="mini-game" id="miniGame">
+            <h3 class="game-title">CODING CHALLENGE</h3>
+            <p class="game-description" id="gameDescription">You face a critical bug that needs fixing before the deadline. What approach do you take?</p>
+            <div class="game-buttons" id="gameButtons">
+                <button class="game-btn">Debug systematically</button>
+                <button class="game-btn">Ask for help</button>
+                <button class="game-btn">Try quick fixes</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
