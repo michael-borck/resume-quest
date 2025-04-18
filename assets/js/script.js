@@ -838,26 +838,28 @@ const gameState = {
       button.textContent = option.text;
   
       button.addEventListener('click', () => {
+        // Run the result function
         option.result();
+
+        // Hide mini-game after choice
         hideMiniGame();
-        
-        // If no specific navigation was triggered in the result function,
-        // continue to the next card in the current deck
-        setTimeout(() => {
-          // Only create a new card if we haven't switched decks in the result function
-          if (gameState.currentDeck === gameState.previousDeck && 
-              option.result.toString().indexOf('switchDeck') === -1 &&
-              option.result.toString().indexOf('showPersonalCard') === -1) {
+
+        // Restore previous deck and create next card after mini-game
+        if (gameState.previousDeck) {
+          // Check if result function explicitly switched deck or showed personal card
+          const resStr = option.result.toString();
+          if (resStr.indexOf('switchDeck') === -1 &&
+              resStr.indexOf('showMiniGame') === -1 &&
+              resStr.indexOf('showPersonalCard') === -1) {
+            // Restore deck
+            gameState.currentDeck = gameState.previousDeck;
+            gameState.previousDeck = null;
             createCard(gameState.currentCardIndex + 1);
+          } else {
+            gameState.previousDeck = null;
           }
-        }, 300);
+        }
       });
-  
-      gameButtons.appendChild(button);
-    });
-  
-    miniGame.classList.add('show');
-  }
   
   // Hide mini-game
   function hideMiniGame() {
