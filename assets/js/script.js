@@ -115,12 +115,8 @@ const cardDecks = {
               addSkill('Microservices');
               increaseStats(1, 0, 1);
               showNotification('Achievement unlocked: System Architect!');
-              // We manually switch to main deck - disable automatic next card creation
-              document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
-              // Switch to main deck after showing achievement
-              setTimeout(() => {
-                  switchDeck('main');
-              }, 2000);
+              // Just directly switch to main deck
+              switchDeck('main');
           },
           rightResult: function() {
               switchDeck('main');
@@ -194,12 +190,8 @@ const cardDecks = {
           leftResult: function() {
               addSkill('Distributed Systems');
               increaseStats(1, 0, 1);
-              // We manually switch to main deck - disable automatic next card creation
-              document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
-              // Switch to main deck after showing achievement
-              setTimeout(() => {
-                  switchDeck('main');
-              }, 1000);
+              // Just directly switch to main deck
+              switchDeck('main');
           },
           rightResult: function() {
               switchDeck('main');
@@ -410,9 +402,8 @@ const miniGames = {
                 showNotification('Michael values creative problem-solving above all!');
                 addSkill('Creativity');
                 increaseStats(1, 0, 1);
-                setTimeout(() => {
-                    showPersonalCard('creativity');
-                }, 1000);
+                // Show personal card immediately
+                showPersonalCard('creativity');
             }
         },
         {
@@ -421,9 +412,8 @@ const miniGames = {
                 showNotification('Michael thrives in collaborative environments!');
                 addSkill('Teamwork');
                 increaseStats(1, 1, 0);
-                setTimeout(() => {
-                    showPersonalCard('teamwork');
-                }, 1000);
+                // Show personal card immediately
+                showPersonalCard('teamwork');
             }
         },
         {
@@ -432,9 +422,8 @@ const miniGames = {
                 showNotification('Michael is dedicated to lifelong learning!');
                 addSkill('Learning');
                 increaseStats(1, 1, 1);
-                setTimeout(() => {
-                    showPersonalCard('learning');
-                }, 1000);
+                // Show personal card immediately
+                showPersonalCard('learning');
             }
         }
     ]
@@ -473,10 +462,13 @@ function initGame() {
   // Start button event listener
   startBtn.addEventListener('click', () => {
       storyScreen.style.opacity = '0';
-      setTimeout(() => {
+      // Use CSS transition end event instead of setTimeout
+      storyScreen.addEventListener('transitionend', function handler() {
           storyScreen.style.display = 'none';
           createCard(0);
-      }, 1000);
+          // Remove the event listener to prevent multiple calls
+          storyScreen.removeEventListener('transitionend', handler);
+      });
   });
 
   // Restart button event listener
@@ -548,12 +540,8 @@ function setupCardDragHandlers(card, cardData) {
     // Direct invocation functions for main card
     function directLeftChoice() {
         console.log("Direct left choice execution: going to Professional");
-        // Mark all cards for cleanup to prevent stale handlers from executing
-        document.querySelectorAll('.card').forEach(c => c.classList.add('cleanup'));
-        
-        // Remove all existing event listeners by cloning and replacing the card
-        const newCard = card.cloneNode(true);
-        card.parentNode.replaceChild(newCard, card);
+        // Simply remove the card and switch deck
+        card.remove();
         
         // Switch deck directly
         switchDeck('professional');
@@ -563,12 +551,8 @@ function setupCardDragHandlers(card, cardData) {
     
     function directRightChoice() {
         console.log("Direct right choice execution: going to Personal");
-        // Mark all cards for cleanup to prevent stale handlers from executing
-        document.querySelectorAll('.card').forEach(c => c.classList.add('cleanup'));
-        
-        // Remove all existing event listeners by cloning and replacing the card
-        const newCard = card.cloneNode(true);
-        card.parentNode.replaceChild(newCard, card);
+        // Simply remove the card and switch deck
+        card.remove();
         
         // Switch deck directly
         switchDeck('personal');
@@ -602,109 +586,79 @@ function setupCardDragHandlers(card, cardData) {
     });
     
     function handleLeftChoice() {
-        // Capture current counter to avoid stale executions
-        const capturedCounter = window._deckSwitchCounter || 0;
+        console.log(`Executing left result for ${cardData.title}`);
         
-        card.classList.add('swiping-left');
-        setTimeout(() => {
-            // Check if this callback is stale
-            if ((window._deckSwitchCounter || 0) !== capturedCounter) {
-                console.log(`Aborting stale left choice handler (counter mismatch ${capturedCounter} vs ${window._deckSwitchCounter})`);
-                return;
+        // Remove the card immediately without animation
+        card.remove();
+        
+        // Increment the currentCardIndex BEFORE executing the result
+        // This is to ensure the next card references work correctly
+        if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
+            gameState.currentCardIndex++;
+            console.log(`Incremented index to ${gameState.currentCardIndex} before left result`);
+        }
+        
+        // Execute the result function
+        cardData.leftResult();
+        gameState.cardsLeft--;
+        updateStats();
+        
+        // Check if game should end after this move
+        if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
+            showGameOver();
+            return;
+        }
+        
+        // Debug after left result
+        console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
+        
+        // If no transition happened in leftResult, create next card
+        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
+        if (document.querySelectorAll('.card').length === 0 && 
+            document.querySelectorAll('.temp-card').length === 0) {
+            console.log("No cards found after left result - creating next card");
+            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
+                createCard(gameState.currentCardIndex);
             }
-            
-            // Check if card has been marked for cleanup
-            if (card.classList.contains('cleanup')) {
-                console.log(`Aborting left choice handler for cleaned up card`);
-                return;
-            }
-            
-            card.remove();
-            console.log(`Executing left result for ${cardData.title}`);
-            
-            // Increment the currentCardIndex BEFORE executing the result
-            // This is to ensure the next card references work correctly
-            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
-                gameState.currentCardIndex++;
-                console.log(`Incremented index to ${gameState.currentCardIndex} before left result`);
-            }
-            
-            cardData.leftResult();
-            gameState.cardsLeft--;
-            updateStats();
-            
-            // Check if game should end after this move
-            if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
-                showGameOver();
-                return;
-            }
-            
-            // Debug after left result
-            console.log(`After left result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
-            
-            // If no transition happened in leftResult, create next card
-            // Skip if we've marked cards as temp (used for cards that handle their own transitions)
-            if (document.querySelectorAll('.card').length === 0 && 
-                document.querySelectorAll('.temp-card').length === 0) {
-                console.log("No cards found after left result - creating next card");
-                if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
-                    createCard(gameState.currentCardIndex);
-                }
-            }
-        }, 300);
+        }
     }
     
     function handleRightChoice() {
-        // Capture current counter to avoid stale executions
-        const capturedCounter = window._deckSwitchCounter || 0;
+        console.log(`Executing right result for ${cardData.title}`);
         
-        card.classList.add('swiping-right');
-        setTimeout(() => {
-            // Check if this callback is stale
-            if ((window._deckSwitchCounter || 0) !== capturedCounter) {
-                console.log(`Aborting stale right choice handler (counter mismatch ${capturedCounter} vs ${window._deckSwitchCounter})`);
-                return;
+        // Remove the card immediately without animation
+        card.remove();
+        
+        // Increment the currentCardIndex BEFORE executing the result
+        // This is to ensure the next card references work correctly
+        if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
+            gameState.currentCardIndex++;
+            console.log(`Incremented index to ${gameState.currentCardIndex} before right result`);
+        }
+        
+        // Execute the result function
+        cardData.rightResult();
+        gameState.cardsLeft--;
+        updateStats();
+        
+        // Check if game should end after this move
+        if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
+            showGameOver();
+            return;
+        }
+        
+        // Debug after right result
+        console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
+        
+        // If no transition happened in rightResult, create next card
+        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
+        if (document.querySelectorAll('.card').length === 0 && 
+            document.querySelectorAll('.temp-card').length === 0) {
+            console.log("No cards found after right result - creating next card");
+            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
+                createCard(gameState.currentCardIndex);
             }
-            
-            // Check if card has been marked for cleanup
-            if (card.classList.contains('cleanup')) {
-                console.log(`Aborting right choice handler for cleaned up card`);
-                return;
-            }
-            
-            card.remove();
-            console.log(`Executing right result for ${cardData.title}`);
-            
-            // Increment the currentCardIndex BEFORE executing the result
-            // This is to ensure the next card references work correctly
-            if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length - 1) {
-                gameState.currentCardIndex++;
-                console.log(`Incremented index to ${gameState.currentCardIndex} before right result`);
-            }
-            
-            cardData.rightResult();
-            gameState.cardsLeft--;
-            updateStats();
-            
-            // Check if game should end after this move
-            if (gameState.cardsLeft <= 0 && gameState.currentDeck === 'main') {
-                showGameOver();
-                return;
-            }
-            
-            // Debug after right result
-            console.log(`After right result: Deck: ${gameState.currentDeck}, Index: ${gameState.currentCardIndex}`);
-            
-            // If no transition happened in rightResult, create next card
-            // Skip if we've marked cards as temp (used for cards that handle their own transitions)
-            if (document.querySelectorAll('.card').length === 0 && 
-                document.querySelectorAll('.temp-card').length === 0) {
-                console.log("No cards found after right result - creating next card");
-                if (gameState.currentCardIndex < cardDecks[gameState.currentDeck].length) {
-                    createCard(gameState.currentCardIndex);
-                }
-            }
-        }, 300);
+        }
     }
     
     card.addEventListener('mousedown', startDrag);
@@ -853,17 +807,8 @@ function switchDeck(deckName) {
     return;
   }
   
-  // Remove any lingering timeouts
-  // This is a hack to get around the fact that we can't explicitly clear timeouts
-  // Create a unique counter to avoid any stale functions from executing further actions
-  window._deckSwitchCounter = (window._deckSwitchCounter || 0) + 1;
-  const currentCounter = window._deckSwitchCounter;
-  console.log(`Setting deck switch counter to ${currentCounter}`);
-  
   // Clear all UI elements that might be persisting
-  document.querySelectorAll('.temp-card').forEach(card => card.remove());
   document.querySelectorAll('.card').forEach(card => card.remove());
-  document.querySelectorAll('.cleanup').forEach(card => card.remove());
   swipeLeft.style.opacity = '0';
   swipeRight.style.opacity = '0';
   
@@ -950,11 +895,18 @@ function increaseStats(skillInc, expInc, achieveInc) {
 
 // Show notification
 function showNotification(message) {
+  // Clear any existing notification timeout
+  if (window.notificationTimeout) {
+    clearTimeout(window.notificationTimeout);
+  }
+  
   notification.textContent = message;
   notification.classList.add('show');
 
-  setTimeout(() => {
+  // Store the timeout ID so we can cancel it if needed
+  window.notificationTimeout = setTimeout(() => {
       notification.classList.remove('show');
+      window.notificationTimeout = null;
   }, 3000);
 }
 
@@ -994,14 +946,11 @@ function showMiniGame(gameId) {
           option.result();
           hideMiniGame();
           
-          // Return to previous deck after mini-game completes
-          // Use setTimeout to allow notifications to be visible
-          setTimeout(() => {
-              if (gameState.previousDeck) {
-                  switchDeck(gameState.previousDeck);
-                  gameState.previousDeck = null;
-              }
-          }, 1000);
+          // Return to previous deck immediately
+          if (gameState.previousDeck) {
+              switchDeck(gameState.previousDeck);
+              gameState.previousDeck = null;
+          }
       });
 
       gameButtons.appendChild(button);
@@ -1029,11 +978,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael\'s creativity shines in both work and hobbies!');
-                // We manually switch to projects deck - disable automatic next card creation
-                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
-                setTimeout(() => {
-                    switchDeck('projects');
-                }, 1000);
+                // Just directly switch to projects deck
+                switchDeck('projects');
             },
             rightResult: function() {
                 switchDeck('main');
@@ -1048,11 +994,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael has led multiple successful team projects!');
-                // We manually switch to work deck - disable automatic next card creation
-                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
-                setTimeout(() => {
-                    switchDeck('work');
-                }, 1000);
+                // Just directly switch to work deck
+                switchDeck('work');
             },
             rightResult: function() {
                 switchDeck('main');
@@ -1067,11 +1010,8 @@ function showPersonalCard(valueType) {
             rightChoice: 'Continue journey',
             leftResult: function() {
                 showNotification('Michael dedicates time every week to learning!');
-                // We manually switch to education deck - disable automatic next card creation
-                document.querySelectorAll('.card').forEach(c => c.classList.add('temp-card'));
-                setTimeout(() => {
-                    switchDeck('education');
-                }, 1000);
+                // Just directly switch to education deck
+                switchDeck('education');
             },
             rightResult: function() {
                 switchDeck('main');
