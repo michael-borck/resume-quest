@@ -548,7 +548,14 @@ function setupCardDragHandlers(card, cardData) {
     // Direct invocation functions for main card
     function directLeftChoice() {
         console.log("Direct left choice execution: going to Professional");
-        card.remove();
+        // Mark all cards for cleanup to prevent stale handlers from executing
+        document.querySelectorAll('.card').forEach(c => c.classList.add('cleanup'));
+        
+        // Remove all existing event listeners by cloning and replacing the card
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        // Switch deck directly
         switchDeck('professional');
         gameState.cardsLeft--;
         updateStats();
@@ -556,7 +563,14 @@ function setupCardDragHandlers(card, cardData) {
     
     function directRightChoice() {
         console.log("Direct right choice execution: going to Personal");
-        card.remove();
+        // Mark all cards for cleanup to prevent stale handlers from executing
+        document.querySelectorAll('.card').forEach(c => c.classList.add('cleanup'));
+        
+        // Remove all existing event listeners by cloning and replacing the card
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        // Switch deck directly
         switchDeck('personal');
         gameState.cardsLeft--;
         updateStats();
@@ -588,8 +602,23 @@ function setupCardDragHandlers(card, cardData) {
     });
     
     function handleLeftChoice() {
+        // Capture current counter to avoid stale executions
+        const capturedCounter = window._deckSwitchCounter || 0;
+        
         card.classList.add('swiping-left');
         setTimeout(() => {
+            // Check if this callback is stale
+            if ((window._deckSwitchCounter || 0) !== capturedCounter) {
+                console.log(`Aborting stale left choice handler (counter mismatch ${capturedCounter} vs ${window._deckSwitchCounter})`);
+                return;
+            }
+            
+            // Check if card has been marked for cleanup
+            if (card.classList.contains('cleanup')) {
+                console.log(`Aborting left choice handler for cleaned up card`);
+                return;
+            }
+            
             card.remove();
             console.log(`Executing left result for ${cardData.title}`);
             
@@ -626,8 +655,23 @@ function setupCardDragHandlers(card, cardData) {
     }
     
     function handleRightChoice() {
+        // Capture current counter to avoid stale executions
+        const capturedCounter = window._deckSwitchCounter || 0;
+        
         card.classList.add('swiping-right');
         setTimeout(() => {
+            // Check if this callback is stale
+            if ((window._deckSwitchCounter || 0) !== capturedCounter) {
+                console.log(`Aborting stale right choice handler (counter mismatch ${capturedCounter} vs ${window._deckSwitchCounter})`);
+                return;
+            }
+            
+            // Check if card has been marked for cleanup
+            if (card.classList.contains('cleanup')) {
+                console.log(`Aborting right choice handler for cleaned up card`);
+                return;
+            }
+            
             card.remove();
             console.log(`Executing right result for ${cardData.title}`);
             
@@ -809,9 +853,17 @@ function switchDeck(deckName) {
     return;
   }
   
+  // Remove any lingering timeouts
+  // This is a hack to get around the fact that we can't explicitly clear timeouts
+  // Create a unique counter to avoid any stale functions from executing further actions
+  window._deckSwitchCounter = (window._deckSwitchCounter || 0) + 1;
+  const currentCounter = window._deckSwitchCounter;
+  console.log(`Setting deck switch counter to ${currentCounter}`);
+  
   // Clear all UI elements that might be persisting
   document.querySelectorAll('.temp-card').forEach(card => card.remove());
   document.querySelectorAll('.card').forEach(card => card.remove());
+  document.querySelectorAll('.cleanup').forEach(card => card.remove());
   swipeLeft.style.opacity = '0';
   swipeRight.style.opacity = '0';
   
