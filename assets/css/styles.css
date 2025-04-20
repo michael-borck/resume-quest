@@ -176,8 +176,8 @@ body {
     position: absolute;
     width: 85%;
     max-width: 350px;
-    height: 65%;
-    max-height: 500px;
+    height: 70%;
+    max-height: 520px;
     background-color: #222;
     border: 3px solid #444;
     border-radius: 15px;
@@ -232,7 +232,7 @@ body {
 }
 
 .card-content {
-    padding: 15px;
+    padding: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -240,6 +240,7 @@ body {
 }
 
 .card-text {
+    padding: 0 15px;
     font-size: 10px;
     line-height: 1.8;
     margin-bottom: 20px;
@@ -247,18 +248,22 @@ body {
 
 .card-icon {
     width: 100%;
-    height: auto;
-    max-height: 180px;
-    margin: 0 auto 20px;
-    align-self: center;
+    height: 33%;
+    margin: 0 auto 15px;
+    align-self: stretch;
     image-rendering: pixelated;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #222;
+    border-bottom: 2px solid #444;
 }
 
 .card-icon img {
     width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
     image-rendering: pixelated;
 }
 
@@ -266,6 +271,7 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 11px;
+    padding: 0 15px 15px;
 }
 
 .choice-left, .choice-right {
