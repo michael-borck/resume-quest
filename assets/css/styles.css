@@ -176,8 +176,9 @@ body {
     position: absolute;
     width: 85%;
     max-width: 350px;
-    height: 70%;
-    max-height: 520px;
+    height: 72%;
+    min-height: 500px;
+    max-height: 540px;
     background-color: #222;
     border: 3px solid #444;
     border-radius: 15px;
@@ -243,13 +244,15 @@ body {
     padding: 0 15px;
     font-size: 10px;
     line-height: 1.8;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     flex: 1;
     overflow-y: auto;
+    max-height: 45%;
 }
 
 .card-choices {
     margin-top: auto;
+    padding: 0 15px 15px;
 }
 
 .card-icon {
@@ -285,6 +288,10 @@ body {
     text-align: center;
     padding: 5px;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
 }
 
 .choice-left {
@@ -779,6 +786,10 @@ body {
   .card-choices {
     padding: 0 10px 10px;
     margin-top: auto;
+  }
+  
+  .choice-left, .choice-right {
+    min-height: 30px; /* Smaller on mobile */
   }
   
   /* Skills inventory repositioning */
