@@ -751,13 +751,22 @@ body {
   /* Card adjustments */
   .card {
     width: 90%;
-    height: 60%;
-    max-height: 60vh; /* Ensure it doesn't get too tall */
+    height: 65%;
+    max-height: 65vh; /* Ensure it doesn't get too tall */
+  }
+  
+  .card-icon {
+    height: 33%;
   }
   
   .card-text {
     font-size: 8px;
     line-height: 1.5;
+    padding: 0 10px;
+  }
+  
+  .card-choices {
+    padding: 0 10px 10px;
   }
   
   /* Skills inventory repositioning */
@@ -818,13 +827,12 @@ body {
   }
   
   .card {
-    height: 55%;
+    height: 60%;
   }
   
   .card-icon {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 8px;
+    height: 33%;
+    margin-bottom: 10px;
   }
   
   .game-header, .stats-bar {
@@ -872,11 +880,20 @@ body {
   }
   
   .card {
-    height: 50%;
+    height: 60%;
+  }
+  
+  .card-icon {
+    height: 33%;
   }
   
   .card-text {
     margin-bottom: 8px;
+    padding: 0 8px;
+  }
+  
+  .card-choices {
+    padding: 0 8px 8px;
   }
 }
 
@@ -888,6 +905,14 @@ body {
   
   .start-btn {
     bottom: 15px;
+  }
+  
+  .card {
+    height: 70%;
+  }
+  
+  .card-icon {
+    height: 33%;
   }
   
   .stats-bar {
