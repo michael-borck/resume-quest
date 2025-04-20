@@ -246,15 +246,19 @@ body {
 }
 
 .card-icon {
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    height: auto;
+    max-height: 180px;
     margin: 0 auto 20px;
-    background-color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #444;
     align-self: center;
+    image-rendering: pixelated;
+    overflow: hidden;
+}
+
+.card-icon img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
     image-rendering: pixelated;
 }
 
@@ -422,8 +426,23 @@ body {
 
 .game-title {
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: var(--primary-color);
+}
+
+.game-image {
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto 15px;
+    image-rendering: pixelated;
+}
+
+.game-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    image-rendering: pixelated;
+    border: 2px solid #444;
 }
 
 .game-description {

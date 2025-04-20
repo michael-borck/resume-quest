@@ -331,10 +331,25 @@ function createCard(index) {
     const card = document.createElement('div');
     card.classList.add('card', cardData.type);
 
+    // Determine image path based on card type and title
+    let imagePath = '';
+    
+    if (cardData.imagePath) {
+        // Use the explicit image path if provided
+        imagePath = cardData.imagePath;
+    } else {
+        // Fallback to category-based path
+        const folder = gameState.getCurrentDeck();
+        const sanitizedTitle = cardData.title.toLowerCase().replace(/[^a-z0-9]/g, '-');
+        imagePath = `assets/img/${folder}/${sanitizedTitle}.png`;
+    }
+    
     card.innerHTML = `
         <div class="card-header">${cardData.title}</div>
         <div class="card-content">
-            <div class="card-icon">${cardData.icon}</div>
+            <div class="card-icon">
+                <img src="${imagePath}" alt="${cardData.title}" onerror="this.onerror=null; this.src='assets/img/${gameState.getCurrentDeck()}/developer.png';">
+            </div>
             <div class="card-text">${cardData.text}</div>
             <div class="card-choices">
                 <div class="choice-left">${cardData.leftChoice}</div>
@@ -494,6 +509,15 @@ function showMiniGame(gameId) {
   
   gameDescription.textContent = game.description;
   document.querySelector('.game-title').textContent = game.title;
+  
+  // Add mini-game image if not already present
+  const gameImageContainer = document.querySelector('.game-image');
+  if (!gameImageContainer) {
+    const imageEl = document.createElement('div');
+    imageEl.classList.add('game-image');
+    imageEl.innerHTML = '<img src="assets/img/mini-game/challenge.png" alt="Mini-Game Challenge">';
+    miniGame.insertBefore(imageEl, gameDescription.parentNode);
+  }
 
   // Create game buttons
   gameButtons.innerHTML = '';
@@ -539,10 +563,15 @@ function showPersonalCard(valueType) {
     const card = document.createElement('div');
     card.classList.add('card', 'personal');
     
+    // Determine image path for personal card
+    let imagePath = `assets/img/personal/${valueType}.png`;
+    
     card.innerHTML = `
         <div class="card-header">${cardData.title}</div>
         <div class="card-content">
-            <div class="card-icon">${cardData.icon}</div>
+            <div class="card-icon">
+                <img src="${imagePath}" alt="${cardData.title}" onerror="this.onerror=null; this.src='assets/img/personal/creativity.png';">
+            </div>
             <div class="card-text">${cardData.text}</div>
             <div class="card-choices">
                 <div class="choice-left">${cardData.leftChoice}</div>
