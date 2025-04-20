@@ -2,7 +2,7 @@
 // Handles UI, DOM interaction, and game logic
 
 // Import modules
-import { cardDecks, miniGames, personalCards } from './decks.js';
+import { cardDecks, miniGames, personalCards, initDeckFunctions } from './decks.js';
 import { gameState } from './gameState.js';
 
 // DOM elements
@@ -34,6 +34,15 @@ const closeHelpBtn = document.getElementById('closeHelpBtn');
 
 // Initialize game
 function initGame() {
+  // Initialize deck functions first
+  initDeckFunctions({
+    switchDeck: switchDeck,
+    showMiniGame: showMiniGame,
+    addSkill: addSkill,
+    increaseStats: increaseStats,
+    showNotification: showNotification
+  });
+  
   // Start button event listener
   startBtn.addEventListener('click', () => {
       storyScreen.style.opacity = '0';

@@ -1,6 +1,22 @@
 // Card Decks and Mini-Games Data
 // This file contains all the data for the card decks and mini-games
 
+// These functions will be initialized from script.js
+let switchDeckFn;
+let showMiniGameFn;
+let addSkillFn;
+let increaseStatsFn;
+let showNotificationFn;
+
+// Initialize the deck functions with references from script.js
+export function initDeckFunctions(functions) {
+  switchDeckFn = functions.switchDeck;
+  showMiniGameFn = functions.showMiniGame;
+  addSkillFn = functions.addSkill;
+  increaseStatsFn = functions.increaseStats;
+  showNotificationFn = functions.showNotification;
+}
+
 // Card data
 export const cardDecks = {
   main: [
@@ -13,10 +29,10 @@ export const cardDecks = {
       leftChoice: "Professional Path",
       rightChoice: "Personal Path",
       leftResult: function () {
-        switchDeck("professional");
+        switchDeckFn("professional");
       },
       rightResult: function () {
-        switchDeck("personal");
+        switchDeckFn("personal");
       },
     },
   ],
@@ -31,10 +47,10 @@ export const cardDecks = {
       leftChoice: "Work Experience",
       rightChoice: "Education",
       leftResult: function () {
-        switchDeck("work");
+        switchDeckFn("work");
       },
       rightResult: function () {
-        switchDeck("education");
+        switchDeckFn("education");
       },
     },
   ],
@@ -48,10 +64,10 @@ export const cardDecks = {
       leftChoice: "Projects & Hobbies",
       rightChoice: "Values & Interests",
       leftResult: function () {
-        switchDeck("projects");
+        switchDeckFn("projects");
       },
       rightResult: function () {
-        showMiniGame("personalValues");
+        showMiniGameFn("personalValues");
       },
     },
   ],
@@ -65,14 +81,14 @@ export const cardDecks = {
       leftChoice: "Focus on leadership",
       rightChoice: "Focus on tech",
       leftResult: function () {
-        addSkill("Leadership");
-        increaseStats(1, 2, 1);
+        addSkillFn("Leadership");
+        increaseStatsFn(1, 2, 1);
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("CI/CD");
-        increaseStats(1, 1, 0);
-        showMiniGame("deploymentChallenge");
+        addSkillFn("CI/CD");
+        increaseStatsFn(1, 1, 0);
+        showMiniGameFn("deploymentChallenge");
       },
     },
     {
@@ -84,13 +100,13 @@ export const cardDecks = {
       leftChoice: "Optimize code",
       rightChoice: "Improve UX",
       leftResult: function () {
-        addSkill("React");
-        increaseStats(1, 1, 0);
+        addSkillFn("React");
+        increaseStatsFn(1, 1, 0);
         // Don't manipulate the index here - it's now handled in handleLeftChoice
       },
       rightResult: function () {
-        addSkill("UX Design");
-        increaseStats(1, 1, 1);
+        addSkillFn("UX Design");
+        increaseStatsFn(1, 1, 1);
         // Don't manipulate the index here - it's now handled in handleRightChoice
       },
     },
@@ -103,14 +119,14 @@ export const cardDecks = {
       leftChoice: "Database focus",
       rightChoice: "API design",
       leftResult: function () {
-        addSkill("MongoDB");
-        increaseStats(1, 1, 0);
+        addSkillFn("MongoDB");
+        increaseStatsFn(1, 1, 0);
         // Don't manipulate the index here - it's now handled in handleLeftChoice
       },
       rightResult: function () {
-        addSkill("Node.js");
-        increaseStats(1, 1, 0);
-        showMiniGame("apiChallenge");
+        addSkillFn("Node.js");
+        increaseStatsFn(1, 1, 0);
+        showMiniGameFn("apiChallenge");
       },
     },
     {
@@ -122,14 +138,14 @@ export const cardDecks = {
       leftChoice: "Learn more",
       rightChoice: "Continue journey",
       leftResult: function () {
-        addSkill("Microservices");
-        increaseStats(1, 0, 1);
-        showNotification("Achievement unlocked: System Architect!");
+        addSkillFn("Microservices");
+        increaseStatsFn(1, 0, 1);
+        showNotificationFn("Achievement unlocked: System Architect!");
         // Just directly switch to main deck
-        switchDeck("main");
+        switchDeckFn("main");
       },
       rightResult: function () {
-        switchDeck("main");
+        switchDeckFn("main");
       },
     },
   ],
@@ -144,13 +160,13 @@ export const cardDecks = {
       leftChoice: "Focus on theory",
       rightChoice: "Focus on practice",
       leftResult: function () {
-        addSkill("Algorithms");
-        increaseStats(1, 0, 0);
+        addSkillFn("Algorithms");
+        increaseStatsFn(1, 0, 0);
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("Software Design");
-        increaseStats(1, 1, 0);
+        addSkillFn("Software Design");
+        increaseStatsFn(1, 1, 0);
         // No setTimeout needed - next card is handled automatically
       },
     },
@@ -163,15 +179,15 @@ export const cardDecks = {
       leftChoice: "Deep dive: Cloud",
       rightChoice: "Deep dive: ML",
       leftResult: function () {
-        addSkill("AWS");
-        increaseStats(1, 0, 1);
+        addSkillFn("AWS");
+        increaseStatsFn(1, 0, 1);
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("TensorFlow");
-        increaseStats(1, 0, 0);
+        addSkillFn("TensorFlow");
+        increaseStatsFn(1, 0, 0);
         // Use the skillAssessment minigame for ML challenge
-        showMiniGame("skillAssessment");
+        showMiniGameFn("skillAssessment");
       },
     },
     {
@@ -183,13 +199,13 @@ export const cardDecks = {
       leftChoice: "Apply knowledge",
       rightChoice: "Learn more",
       leftResult: function () {
-        increaseStats(0, 1, 1);
-        showNotification("Achievement unlocked: Cloud Expert!");
+        increaseStatsFn(0, 1, 1);
+        showNotificationFn("Achievement unlocked: Cloud Expert!");
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("GCP");
-        increaseStats(1, 0, 0);
+        addSkillFn("GCP");
+        increaseStatsFn(1, 0, 0);
         // No setTimeout needed - next card is handled automatically
       },
     },
@@ -202,13 +218,13 @@ export const cardDecks = {
       leftChoice: "Technical details",
       rightChoice: "Continue journey",
       leftResult: function () {
-        addSkill("Distributed Systems");
-        increaseStats(1, 0, 1);
+        addSkillFn("Distributed Systems");
+        increaseStatsFn(1, 0, 1);
         // Just directly switch to main deck
-        switchDeck("main");
+        switchDeckFn("main");
       },
       rightResult: function () {
-        switchDeck("main");
+        switchDeckFn("main");
       },
     },
   ],
@@ -223,14 +239,14 @@ export const cardDecks = {
       leftChoice: "Technical specs",
       rightChoice: "User features",
       leftResult: function () {
-        addSkill("Full-Stack");
-        increaseStats(1, 0, 0);
+        addSkillFn("Full-Stack");
+        increaseStatsFn(1, 0, 0);
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("UI/UX");
-        increaseStats(1, 0, 1);
-        showMiniGame("ecommerceFeature");
+        addSkillFn("UI/UX");
+        increaseStatsFn(1, 0, 1);
+        showMiniGameFn("ecommerceFeature");
       },
     },
     {
@@ -242,13 +258,13 @@ export const cardDecks = {
       leftChoice: "Data analysis",
       rightChoice: "UI animations",
       leftResult: function () {
-        addSkill("Data Viz");
-        increaseStats(1, 0, 0);
+        addSkillFn("Data Viz");
+        increaseStatsFn(1, 0, 0);
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
-        addSkill("Flutter");
-        increaseStats(1, 0, 0);
+        addSkillFn("Flutter");
+        increaseStatsFn(1, 0, 0);
         // No setTimeout needed - next card is handled automatically
       },
     },
@@ -261,14 +277,14 @@ export const cardDecks = {
       leftChoice: "ML algorithm",
       rightChoice: "User testing",
       leftResult: function () {
-        addSkill("Python");
-        increaseStats(1, 0, 0);
+        addSkillFn("Python");
+        increaseStatsFn(1, 0, 0);
         // Use the ecommerceFeature minigame as a substitute for AI challenge
-        showMiniGame("ecommerceFeature");
+        showMiniGameFn("ecommerceFeature");
       },
       rightResult: function () {
-        addSkill("Product Design");
-        increaseStats(1, 0, 1);
+        addSkillFn("Product Design");
+        increaseStatsFn(1, 0, 1);
         // No setTimeout needed - next card is handled automatically
       },
     },
@@ -280,20 +296,20 @@ export const cardDecks = {
       leftChoice: "View contributions",
       rightChoice: "Continue journey",
       leftResult: function () {
-        addSkill("Open Source");
-        increaseStats(1, 0, 1);
-        showNotification("Achievement unlocked: Community Contributor!");
+        addSkillFn("Open Source");
+        increaseStatsFn(1, 0, 1);
+        showNotificationFn("Achievement unlocked: Community Contributor!");
         // We manually switch to main deck - disable automatic next card creation
         document
           .querySelectorAll(".card")
           .forEach((c) => c.classList.add("temp-card"));
         // Switch to main deck after showing achievement
         setTimeout(() => {
-          switchDeck("main");
+          switchDeckFn("main");
         }, 2000);
       },
       rightResult: function () {
-        switchDeck("main");
+        switchDeckFn("main");
       },
     },
   ],
@@ -309,22 +325,22 @@ export const miniGames = {
       {
         text: "Rollback immediately",
         result: function () {
-          showNotification("Good choice! You minimized downtime.");
-          increaseStats(0, 1, 1);
+          showNotificationFn("Good choice! You minimized downtime.");
+          increaseStatsFn(0, 1, 1);
         },
       },
       {
         text: "Debug in production",
         result: function () {
-          showNotification("Risky move that extended downtime.");
-          increaseStats(1, 0, 0);
+          showNotificationFn("Risky move that extended downtime.");
+          increaseStatsFn(1, 0, 0);
         },
       },
       {
         text: "Check CI/CD logs",
         result: function () {
-          showNotification("Methodical approach! Issue identified.");
-          increaseStats(1, 1, 0);
+          showNotificationFn("Methodical approach! Issue identified.");
+          increaseStatsFn(1, 1, 0);
         },
       },
     ],
@@ -337,22 +353,22 @@ export const miniGames = {
       {
         text: "Implement caching",
         result: function () {
-          showNotification("Great solution! Response time improved by 70%");
-          increaseStats(1, 1, 1);
+          showNotificationFn("Great solution! Response time improved by 70%");
+          increaseStatsFn(1, 1, 1);
         },
       },
       {
         text: "Add more servers",
         result: function () {
-          showNotification("Works but costly. Consider optimization too.");
-          increaseStats(0, 1, 0);
+          showNotificationFn("Works but costly. Consider optimization too.");
+          increaseStatsFn(0, 1, 0);
         },
       },
       {
         text: "Optimize queries",
         result: function () {
-          showNotification("Good start! Database load reduced.");
-          increaseStats(1, 0, 0);
+          showNotificationFn("Good start! Database load reduced.");
+          increaseStatsFn(1, 0, 0);
         },
       },
     ],
@@ -365,23 +381,23 @@ export const miniGames = {
       {
         text: "Think aloud & test",
         result: function () {
-          showNotification("Perfect approach! You got the job!");
-          increaseStats(1, 1, 1);
-          addSkill("Problem Solving");
+          showNotificationFn("Perfect approach! You got the job!");
+          increaseStatsFn(1, 1, 1);
+          addSkillFn("Problem Solving");
         },
       },
       {
         text: "Code immediately",
         result: function () {
-          showNotification("Too rushed! Missed some edge cases.");
-          increaseStats(1, 0, 0);
+          showNotificationFn("Too rushed! Missed some edge cases.");
+          increaseStatsFn(1, 0, 0);
         },
       },
       {
         text: "Ask clarifying Qs",
         result: function () {
-          showNotification("Good start! Shows thoroughness.");
-          increaseStats(1, 0, 0);
+          showNotificationFn("Good start! Shows thoroughness.");
+          increaseStatsFn(1, 0, 0);
         },
       },
     ],
@@ -394,23 +410,23 @@ export const miniGames = {
       {
         text: "WebSockets",
         result: function () {
-          showNotification("Perfect for real-time updates!");
-          increaseStats(1, 0, 1);
-          addSkill("WebSockets");
+          showNotificationFn("Perfect for real-time updates!");
+          increaseStatsFn(1, 0, 1);
+          addSkillFn("WebSockets");
         },
       },
       {
         text: "Polling API",
         result: function () {
-          showNotification("Works but not very efficient.");
-          increaseStats(0, 1, 0);
+          showNotificationFn("Works but not very efficient.");
+          increaseStatsFn(0, 1, 0);
         },
       },
       {
         text: "Server-sent events",
         result: function () {
-          showNotification("Good alternative! One-way comms.");
-          increaseStats(1, 0, 0);
+          showNotificationFn("Good alternative! One-way comms.");
+          increaseStatsFn(1, 0, 0);
         },
       },
     ],
@@ -423,11 +439,11 @@ export const miniGames = {
       {
         text: "Creativity & Innovation",
         result: function () {
-          showNotification(
+          showNotificationFn(
             "Michael values creative problem-solving above all!"
           );
-          addSkill("Creativity");
-          increaseStats(1, 0, 1);
+          addSkillFn("Creativity");
+          increaseStatsFn(1, 0, 1);
           // Show personal card immediately
           showPersonalCard("creativity");
         },
@@ -435,9 +451,9 @@ export const miniGames = {
       {
         text: "Teamwork & Collaboration",
         result: function () {
-          showNotification("Michael thrives in collaborative environments!");
-          addSkill("Teamwork");
-          increaseStats(1, 1, 0);
+          showNotificationFn("Michael thrives in collaborative environments!");
+          addSkillFn("Teamwork");
+          increaseStatsFn(1, 1, 0);
           // Show personal card immediately
           showPersonalCard("teamwork");
         },
@@ -445,9 +461,9 @@ export const miniGames = {
       {
         text: "Continuous Learning",
         result: function () {
-          showNotification("Michael is dedicated to lifelong learning!");
-          addSkill("Learning");
-          increaseStats(1, 1, 1);
+          showNotificationFn("Michael is dedicated to lifelong learning!");
+          addSkillFn("Learning");
+          increaseStatsFn(1, 1, 1);
           // Show personal card immediately
           showPersonalCard("learning");
         },
@@ -466,12 +482,12 @@ export const personalCards = {
     leftChoice: "Learn more",
     rightChoice: "Continue journey",
     leftResult: function () {
-      showNotification("Michael's creativity shines in both work and hobbies!");
+      showNotificationFn("Michael's creativity shines in both work and hobbies!");
       // Just directly switch to projects deck
-      switchDeck("projects");
+      switchDeckFn("projects");
     },
     rightResult: function () {
-      switchDeck("main");
+      switchDeckFn("main");
     },
   },
   teamwork: {
@@ -482,12 +498,12 @@ export const personalCards = {
     leftChoice: "Learn more",
     rightChoice: "Continue journey",
     leftResult: function () {
-      showNotification("Michael has led multiple successful team projects!");
+      showNotificationFn("Michael has led multiple successful team projects!");
       // Just directly switch to work deck
-      switchDeck("work");
+      switchDeckFn("work");
     },
     rightResult: function () {
-      switchDeck("main");
+      switchDeckFn("main");
     },
   },
   learning: {
@@ -498,12 +514,12 @@ export const personalCards = {
     leftChoice: "Learn more",
     rightChoice: "Continue journey",
     leftResult: function () {
-      showNotification("Michael dedicates time every week to learning!");
+      showNotificationFn("Michael dedicates time every week to learning!");
       // Just directly switch to education deck
-      switchDeck("education");
+      switchDeckFn("education");
     },
     rightResult: function () {
-      switchDeck("main");
+      switchDeckFn("main");
     },
   },
 };
