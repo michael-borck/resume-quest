@@ -67,7 +67,13 @@ export const cardDecks = {
         switchDeckFn("projects");
       },
       rightResult: function () {
-        showMiniGameFn("personalValues");
+        console.log("Values & Interests selected");
+        
+        // Add a small timeout to ensure DOM operations complete first
+        setTimeout(() => {
+          console.log("Showing personal values mini-game");
+          showMiniGameFn("personalValues");
+        }, 50);
       },
     },
   ],
@@ -86,9 +92,15 @@ export const cardDecks = {
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
+        console.log("Focus on tech selected - should show deployment challenge");
         addSkillFn("CI/CD");
         increaseStatsFn(1, 1, 0);
-        showMiniGameFn("deploymentChallenge");
+        
+        // Add a small timeout to ensure DOM operations complete first
+        setTimeout(() => {
+          console.log("Showing deployment challenge mini-game");
+          showMiniGameFn("deploymentChallenge");
+        }, 50);
       },
     },
     {
@@ -124,9 +136,15 @@ export const cardDecks = {
         // Don't manipulate the index here - it's now handled in handleLeftChoice
       },
       rightResult: function () {
+        console.log("API design selected - should show mini-game");
         addSkillFn("Node.js");
         increaseStatsFn(1, 1, 0);
-        showMiniGameFn("apiChallenge");
+        
+        // Add a small timeout to ensure DOM operations complete first
+        setTimeout(() => {
+          console.log("Showing API challenge mini-game");
+          showMiniGameFn("apiChallenge");
+        }, 50);
       },
     },
     {
@@ -184,10 +202,15 @@ export const cardDecks = {
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
+        console.log("Deep dive: ML selected");
         addSkillFn("TensorFlow");
         increaseStatsFn(1, 0, 0);
+        
         // Use the skillAssessment minigame for ML challenge
-        showMiniGameFn("skillAssessment");
+        setTimeout(() => {
+          console.log("Showing ML challenge mini-game");
+          showMiniGameFn("skillAssessment");
+        }, 50);
       },
     },
     {
@@ -244,9 +267,14 @@ export const cardDecks = {
         // No setTimeout needed - next card is handled automatically
       },
       rightResult: function () {
+        console.log("User features selected");
         addSkillFn("UI/UX");
         increaseStatsFn(1, 0, 1);
-        showMiniGameFn("ecommerceFeature");
+        
+        setTimeout(() => {
+          console.log("Showing ecommerce feature mini-game");
+          showMiniGameFn("ecommerceFeature");
+        }, 50);
       },
     },
     {
@@ -277,10 +305,15 @@ export const cardDecks = {
       leftChoice: "ML algorithm",
       rightChoice: "User testing",
       leftResult: function () {
+        console.log("ML algorithm selected");
         addSkillFn("Python");
         increaseStatsFn(1, 0, 0);
+        
         // Use the ecommerceFeature minigame as a substitute for AI challenge
-        showMiniGameFn("ecommerceFeature");
+        setTimeout(() => {
+          console.log("Showing ecommerce feature as AI challenge mini-game");
+          showMiniGameFn("ecommerceFeature");
+        }, 50);
       },
       rightResult: function () {
         addSkillFn("Product Design");
