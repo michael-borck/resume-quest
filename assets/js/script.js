@@ -108,7 +108,7 @@ function updateStats() {
   cardsLeft.textContent = `Cards: ${gameState.getCardsLeft()}`;
 }
 
-// Card drag handling
+// Card event handling - unified for clicks and swipes
 function setupCardDragHandlers(card, cardData) {
     let startX = 0;
     let currentX = 0;
@@ -119,6 +119,68 @@ function setupCardDragHandlers(card, cardData) {
     // Debug info - show what card we're on
     console.log(`Setting up handlers for card: ${cardData.title}`);
     console.log(`Current deck: ${gameState.getCurrentDeck()}, Current index: ${gameState.getCurrentCardIndex()}`);
+    
+    // Define a single function for handling card choices (both left and right)
+    // This is the core function that will be called by both click and swipe handlers
+    function handleCardChoice(isLeft) {
+        const choiceType = isLeft ? 'left' : 'right';
+        const resultFunction = isLeft ? cardData.leftResult : cardData.rightResult;
+        
+        console.log(`Executing ${choiceType} result for ${cardData.title}`);
+        
+        // Clean up and remove card
+        cleanupEventListeners();
+        card.remove();
+        
+        // Special handling for main card to ensure consistent behavior
+        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
+            const targetDeck = isLeft ? 'professional' : 'personal';
+            console.log(`Special handling for main card ${choiceType} choice - going to ${targetDeck}`);
+            switchDeck(targetDeck);
+            gameState.decrementCardsLeft();
+            updateStats();
+            return;
+        }
+        
+        // Increment the currentCardIndex BEFORE executing the result
+        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
+            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
+            console.log(`Incremented index to ${gameState.getCurrentCardIndex()} before ${choiceType} result`);
+        }
+        
+        // Execute the result function
+        resultFunction();
+        gameState.decrementCardsLeft();
+        updateStats();
+        
+        // Check if game should end
+        if (gameState.getCardsLeft() <= 0) {
+            showGameOver();
+            return;
+        }
+        
+        // Debug after result
+        console.log(`After ${choiceType} result: Deck: ${gameState.getCurrentDeck()}, Index: ${gameState.getCurrentCardIndex()}`);
+        
+        // If no transition happened in the result function, create next card
+        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
+        if (document.querySelectorAll('.card').length === 0 && 
+            document.querySelectorAll('.temp-card').length === 0) {
+            console.log(`No cards found after ${choiceType} result - creating next card`);
+            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
+                createCard(gameState.getCurrentCardIndex());
+            }
+        }
+    }
+    
+    // Convenience functions to make code clearer
+    function handleLeftChoice() {
+        handleCardChoice(true);
+    }
+    
+    function handleRightChoice() {
+        handleCardChoice(false);
+    }
     
     // Add click handlers for the left and right choices
     const leftChoice = card.querySelector('.choice-left');
@@ -137,102 +199,7 @@ function setupCardDragHandlers(card, cardData) {
         handleRightChoice();
     });
     
-    function handleLeftChoice() {
-        console.log(`Executing left result for ${cardData.title}`);
-        
-        // Remove the card immediately without animation
-        cleanupEventListeners(); // Clean up event listeners first
-        card.remove();
-        
-        // Special handling for main card to ensure consistent behavior
-        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-            console.log("Special handling for main card left choice - going to Professional");
-            switchDeck('professional');
-            gameState.decrementCardsLeft();
-            updateStats();
-            return;
-        }
-        
-        // Increment the currentCardIndex BEFORE executing the result
-        // This is to ensure the next card references work correctly
-        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
-            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
-            console.log(`Incremented index to ${gameState.getCurrentCardIndex()} before left result`);
-        }
-        
-        // Execute the result function
-        cardData.leftResult();
-        gameState.decrementCardsLeft();
-        updateStats();
-        
-        // Check if game should end after this move
-        if (gameState.getCardsLeft() <= 0) {
-            showGameOver();
-            return;
-        }
-        
-        // Debug after left result
-        console.log(`After left result: Deck: ${gameState.getCurrentDeck()}, Index: ${gameState.getCurrentCardIndex()}`);
-        
-        // If no transition happened in leftResult, create next card
-        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
-        if (document.querySelectorAll('.card').length === 0 && 
-            document.querySelectorAll('.temp-card').length === 0) {
-            console.log("No cards found after left result - creating next card");
-            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
-                createCard(gameState.getCurrentCardIndex());
-            }
-        }
-    }
-    
-    function handleRightChoice() {
-        console.log(`Executing right result for ${cardData.title}`);
-        
-        // Remove the card immediately without animation
-        cleanupEventListeners(); // Clean up event listeners first
-        card.remove();
-        
-        // Special handling for main card to ensure consistent behavior
-        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-            console.log("Special handling for main card right choice - going to Personal");
-            switchDeck('personal');
-            gameState.decrementCardsLeft();
-            updateStats();
-            return;
-        }
-        
-        // Increment the currentCardIndex BEFORE executing the result
-        // This is to ensure the next card references work correctly
-        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
-            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
-            console.log(`Incremented index to ${gameState.getCurrentCardIndex()} before right result`);
-        }
-        
-        // Execute the result function
-        cardData.rightResult();
-        gameState.decrementCardsLeft();
-        updateStats();
-        
-        // Check if game should end after this move
-        if (gameState.getCardsLeft() <= 0) {
-            showGameOver();
-            return;
-        }
-        
-        // Debug after right result
-        console.log(`After right result: Deck: ${gameState.getCurrentDeck()}, Index: ${gameState.getCurrentCardIndex()}`);
-        
-        // If no transition happened in rightResult, create next card
-        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
-        if (document.querySelectorAll('.card').length === 0 && 
-            document.querySelectorAll('.temp-card').length === 0) {
-            console.log("No cards found after right result - creating next card");
-            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
-                createCard(gameState.getCurrentCardIndex());
-            }
-        }
-    }
-    
+    // Set up drag handlers (which will use the same choice functions)
     // Use these to track event handlers for cleanup
     const moveHandler = (e) => drag(e);
     const endHandler = (e) => endDrag(e);
@@ -257,6 +224,7 @@ function setupCardDragHandlers(card, cardData) {
     // Add a custom cleanup event listener
     card.addEventListener('cardCleanup', cleanupEventListeners);
     
+    // Drag handling functions
     function startDrag(e) {
         isDragging = true;
         isClick = true;
@@ -303,17 +271,16 @@ function setupCardDragHandlers(card, cardData) {
         }
         
         const diffX = currentX - startX;
-        const clickDuration = Date.now() - clickStartTime;
         
         // Reset swipe indicators
         swipeLeft.style.opacity = '0';
         swipeRight.style.opacity = '0';
         
         if (diffX < -100) {
-            // Swipe left
+            // Swipe left - use the same handler as click
             handleLeftChoice();
         } else if (diffX > 100) {
-            // Swipe right
+            // Swipe right - use the same handler as click
             handleRightChoice();
         } else {
             // Return to center
