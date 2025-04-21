@@ -141,6 +141,7 @@ function setupCardDragHandlers(card, cardData) {
         console.log(`Executing left result for ${cardData.title}`);
         
         // Remove the card immediately without animation
+        cleanupEventListeners(); // Clean up event listeners first
         card.remove();
         
         // Special handling for main card to ensure consistent behavior
@@ -188,6 +189,7 @@ function setupCardDragHandlers(card, cardData) {
         console.log(`Executing right result for ${cardData.title}`);
         
         // Remove the card immediately without animation
+        cleanupEventListeners(); // Clean up event listeners first
         card.remove();
         
         // Special handling for main card to ensure consistent behavior
@@ -231,14 +233,29 @@ function setupCardDragHandlers(card, cardData) {
         }
     }
     
+    // Use these to track event handlers for cleanup
+    const moveHandler = (e) => drag(e);
+    const endHandler = (e) => endDrag(e);
+    
     card.addEventListener('mousedown', startDrag);
     card.addEventListener('touchstart', startDrag);
     
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag, { passive: false });
+    document.addEventListener('mousemove', moveHandler);
+    document.addEventListener('touchmove', moveHandler, { passive: false });
     
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchend', endDrag);
+    document.addEventListener('mouseup', endHandler);
+    document.addEventListener('touchend', endHandler);
+    
+    // Function to clean up event listeners when card is removed
+    function cleanupEventListeners() {
+        document.removeEventListener('mousemove', moveHandler);
+        document.removeEventListener('touchmove', moveHandler);
+        document.removeEventListener('mouseup', endHandler);
+        document.removeEventListener('touchend', endHandler);
+    }
+    
+    // Add a custom cleanup event listener
+    card.addEventListener('cardCleanup', cleanupEventListeners);
     
     function startDrag(e) {
         isDragging = true;
@@ -278,6 +295,12 @@ function setupCardDragHandlers(card, cardData) {
     function endDrag(e) {
         if (!isDragging) return;
         isDragging = false;
+        
+        // Make sure card still exists in DOM before continuing
+        if (!document.body.contains(card)) {
+            cleanupEventListeners();
+            return;
+        }
         
         const diffX = currentX - startX;
         const clickDuration = Date.now() - clickStartTime;
@@ -391,8 +414,13 @@ function switchDeck(deckName) {
     return;
   }
   
-  // Clear all UI elements that might be persisting
-  document.querySelectorAll('.card').forEach(card => card.remove());
+  // Clear all UI elements that might be persisting and safely remove event listeners
+  document.querySelectorAll('.card').forEach(card => {
+    // Create a custom event to trigger cleanup before removal
+    const cleanupEvent = new CustomEvent('cardCleanup');
+    card.dispatchEvent(cleanupEvent);
+    card.remove();
+  });
   swipeLeft.style.opacity = '0';
   swipeRight.style.opacity = '0';
   
@@ -513,6 +541,16 @@ function showMiniGame(gameId) {
     return;
   }
 
+  // Clear any old buttons to prevent duplicate event listeners
+  gameButtons.innerHTML = '';
+  
+  // Make sure to clean up any existing cards to prevent event issues
+  document.querySelectorAll('.card').forEach(card => {
+    const cleanupEvent = new CustomEvent('cardCleanup');
+    card.dispatchEvent(cleanupEvent);
+    card.remove();
+  });
+
   // Save current deck before showing mini-game
   gameState.setPreviousDeck(gameState.getCurrentDeck());
   
@@ -528,24 +566,35 @@ function showMiniGame(gameId) {
     miniGame.insertBefore(imageEl, gameDescription.parentNode);
   }
 
-  // Create game buttons
-  gameButtons.innerHTML = '';
+  // Create game buttons with safe event handling
   game.options.forEach(option => {
       const button = document.createElement('button');
       button.classList.add('game-btn');
       button.textContent = option.text;
 
-      button.addEventListener('click', () => {
-          option.result();
+      // Use a single click handler function for better cleanup
+      const clickHandler = () => {
+          // Remove the event listener first to prevent double-triggers
+          button.removeEventListener('click', clickHandler);
+          
+          // Execute the result and continue
+          try {
+              option.result();
+          } catch (error) {
+              console.error('Error in mini-game option result:', error);
+          }
+          
           hideMiniGame();
           
           // Return to previous deck immediately
           if (gameState.getPreviousDeck()) {
-              switchDeck(gameState.getPreviousDeck());
+              const prevDeck = gameState.getPreviousDeck();
               gameState.setPreviousDeck(null);
+              switchDeck(prevDeck);
           }
-      });
+      };
 
+      button.addEventListener('click', clickHandler);
       gameButtons.appendChild(button);
   });
 
