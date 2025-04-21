@@ -593,7 +593,20 @@ function showMiniGame(gameId) {
     const imageEl = document.createElement('div');
     imageEl.classList.add('game-image');
     imageEl.innerHTML = '<img src="assets/img/mini-game/challenge.png" alt="Mini-Game Challenge">';
-    miniGame.insertBefore(imageEl, gameDescription.parentNode);
+    // Insert before the game description directly
+    try {
+      // First, ensure gameDescription is actually in the DOM and a child of miniGame
+      if (document.body.contains(gameDescription) && miniGame.contains(gameDescription)) {
+        miniGame.insertBefore(imageEl, gameDescription);
+      } else {
+        // Fallback: just append to miniGame
+        miniGame.appendChild(imageEl);
+      }
+    } catch (error) {
+      console.error("Error inserting game image:", error);
+      // Fallback: just append to miniGame
+      miniGame.appendChild(imageEl);
+    }
   }
 
   // Create game buttons with safe event handling
