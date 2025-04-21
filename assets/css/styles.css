@@ -253,6 +253,7 @@ body {
 .card-choices {
     margin-top: auto;
     padding: 0 15px 15px;
+    margin-bottom: 5px;
 }
 
 .card-icon {
@@ -291,7 +292,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
+    min-height: 38px;
+    max-height: 55px;
+    overflow-y: auto;
+    font-size: 10px;
 }
 
 .choice-left {

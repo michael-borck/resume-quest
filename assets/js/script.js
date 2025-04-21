@@ -166,7 +166,7 @@ function setupCardDragHandlers(card, cardData) {
         updateStats();
         
         // Check if game should end after this move
-        if (gameState.shouldEndGame()) {
+        if (gameState.getCardsLeft() <= 0) {
             showGameOver();
             return;
         }
@@ -214,7 +214,7 @@ function setupCardDragHandlers(card, cardData) {
         updateStats();
         
         // Check if game should end after this move
-        if (gameState.shouldEndGame()) {
+        if (gameState.getCardsLeft() <= 0) {
             showGameOver();
             return;
         }
@@ -428,6 +428,13 @@ function switchDeck(deckName) {
   gameState.setCurrentCardIndex(0);
   console.log(`Reset currentCardIndex to 0 for new deck`);
 
+  // Check if game should end before creating a new card
+  if (gameState.getCardsLeft() <= 0) {
+    console.log('Game over condition reached in switchDeck');
+    showGameOver();
+    return;
+  }
+
   // Update deck info with the new deck
   updateDeckInfo();
   
@@ -523,11 +530,34 @@ function showNotification(message) {
 
 // Show game over screen
 function showGameOver() {
+  console.log('Showing game over screen. Cards left:', gameState.getCardsLeft());
+  
+  // Set cards left to 0 to ensure no more actions can be taken
+  while (gameState.getCardsLeft() > 0) {
+    gameState.decrementCardsLeft();
+  }
+  
+  // Make sure we properly clean up any remaining cards
+  document.querySelectorAll('.card').forEach(card => {
+    const cleanupEvent = new CustomEvent('cardCleanup');
+    card.dispatchEvent(cleanupEvent);
+    card.remove();
+  });
+  
+  // Close mini-game if open
+  hideMiniGame();
+  
+  // Reset indicators
+  swipeLeft.style.opacity = '0';
+  swipeRight.style.opacity = '0';
+  
+  // Update stats display
   const stats = gameState.getFinalStats();
   finalSkills.textContent = stats.skills;
   finalExp.textContent = stats.experience;
   finalAchieve.textContent = stats.achievements;
 
+  // Show game over screen
   gameOver.classList.add('show');
 }
 
