@@ -136,17 +136,9 @@ function setupCardDragHandlers(card, cardData) {
         if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
             const targetDeck = isLeft ? 'professional' : 'personal';
             console.log(`Special handling for main card ${choiceType} choice - going to ${targetDeck}`);
-            
-            // Explicitly log the transition to avoid inconsistencies between devices
-            console.log(`Path selection: ${isLeft ? 'LEFT/Professional' : 'RIGHT/Personal'}`);
-            
-            // Ensure consistent behavior regardless of event type
-            setTimeout(() => {
-                console.log(`Executing deck switch to ${targetDeck} after delay`);
-                switchDeck(targetDeck);
-                gameState.decrementCardsLeft();
-                updateStats();
-            }, 100);
+            switchDeck(targetDeck);
+            gameState.decrementCardsLeft();
+            updateStats();
             return;
         }
         
@@ -232,46 +224,21 @@ function setupCardDragHandlers(card, cardData) {
     // Add a custom cleanup event listener
     card.addEventListener('cardCleanup', cleanupEventListeners);
     
-    // Drag handling functions - normalized for consistent behavior across devices
+    // Simple drag handling functions
     function startDrag(e) {
         isDragging = true;
         isClick = true;
         clickStartTime = Date.now();
-        
-        // Normalize event coordinates for consistent behavior
-        if (e.type === 'mousedown') {
-            startX = e.clientX;
-        } else if (e.type === 'touchstart') {
-            // Prevent default touch behavior to avoid scrolling
-            e.preventDefault();
-            startX = e.touches[0].clientX;
-        }
-        
-        // Log for debugging
-        console.log(`Start drag on ${cardData.title}, startX: ${startX}, event type: ${e.type}`);
-        
+        startX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
         card.classList.add('dragging');
     }
     
     function drag(e) {
         if (!isDragging) return;
         
-        // Always prevent default to ensure consistent behavior
         e.preventDefault();
-        
-        // Normalize event coordinates for consistent behavior
-        if (e.type === 'mousemove') {
-            currentX = e.clientX;
-        } else if (e.type === 'touchmove') {
-            currentX = e.touches[0].clientX;
-        }
-        
+        currentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
         const diffX = currentX - startX;
-        
-        // Log for debugging on large movements
-        if (Math.abs(diffX) > 50) {
-            console.log(`Large drag movement: ${diffX}px, event type: ${e.type}`);
-        }
         
         // If dragged more than 10px, it's not a click
         if (Math.abs(diffX) > 10) {
@@ -280,14 +247,11 @@ function setupCardDragHandlers(card, cardData) {
         
         card.style.transform = `translateX(${diffX}px) rotate(${diffX * 0.05}deg)`;
         
-        // Show swipe indicators - use percentage of card width for consistent behavior
-        const cardWidth = card.offsetWidth;
-        const swipeThreshold = cardWidth * 0.15; // 15% of card width
-        
-        if (diffX < -swipeThreshold) {
+        // Show swipe indicators
+        if (diffX < -50) {
             swipeLeft.style.opacity = '0.7';
             swipeRight.style.opacity = '0';
-        } else if (diffX > swipeThreshold) {
+        } else if (diffX > 50) {
             swipeRight.style.opacity = '0.7';
             swipeLeft.style.opacity = '0';
         } else {
@@ -312,24 +276,14 @@ function setupCardDragHandlers(card, cardData) {
         swipeLeft.style.opacity = '0';
         swipeRight.style.opacity = '0';
         
-        // Log the end of drag for debugging
-        console.log(`End drag on ${cardData.title}, diffX: ${diffX}, event type: ${e.type}`);
-        
-        // Use percentage of card width for consistent behavior across device sizes
-        const cardWidth = card.offsetWidth;
-        const swipeThreshold = cardWidth * 0.3; // 30% of card width to trigger swipe
-        
-        if (diffX < -swipeThreshold) {
-            console.log(`Swipe LEFT triggered with diffX ${diffX}px, threshold: ${-swipeThreshold}px`);
+        if (diffX < -100) {
             // Swipe left - use the same handler as click
             handleLeftChoice();
-        } else if (diffX > swipeThreshold) {
-            console.log(`Swipe RIGHT triggered with diffX ${diffX}px, threshold: ${swipeThreshold}px`);
+        } else if (diffX > 100) {
             // Swipe right - use the same handler as click
             handleRightChoice();
         } else {
             // Return to center
-            console.log(`No swipe triggered, returning to center. diffX: ${diffX}px, threshold: ${swipeThreshold}px`);
             card.style.transform = '';
             card.classList.remove('dragging');
         }
@@ -576,9 +530,6 @@ function showGameOver() {
 
 // Show mini-game
 function showMiniGame(gameId) {
-  // Log detailed information for debugging
-  console.log(`Starting to show mini-game: ${gameId}, screen width: ${window.innerWidth}px`);
-  
   const game = miniGames[gameId];
 
   if (!game) {
@@ -589,28 +540,23 @@ function showMiniGame(gameId) {
 
   // Clear any old buttons to prevent duplicate event listeners
   gameButtons.innerHTML = '';
-  console.log(`Cleared game buttons for: ${gameId}`);
   
   // Make sure to clean up any existing cards to prevent event issues
   document.querySelectorAll('.card').forEach(card => {
     const cleanupEvent = new CustomEvent('cardCleanup');
     card.dispatchEvent(cleanupEvent);
     card.remove();
-    console.log('Removed existing card before mini-game');
   });
 
   // Save current deck before showing mini-game
   gameState.setPreviousDeck(gameState.getCurrentDeck());
-  console.log(`Saved previous deck: ${gameState.getPreviousDeck()}`);
   
   gameDescription.textContent = game.description;
   document.querySelector('.game-title').textContent = game.title;
-  console.log(`Set game title and description for: ${game.title}`);
   
   // Add mini-game image if not already present
   const gameImageContainer = document.querySelector('.game-image');
   if (!gameImageContainer) {
-    console.log('No game image container found, creating one');
     const imageEl = document.createElement('div');
     imageEl.classList.add('game-image');
     imageEl.innerHTML = '<img src="assets/img/mini-game/challenge.png" alt="Mini-Game Challenge">';
@@ -618,60 +564,43 @@ function showMiniGame(gameId) {
     try {
       // First, ensure gameDescription is actually in the DOM and a child of miniGame
       if (document.body.contains(gameDescription) && miniGame.contains(gameDescription)) {
-        console.log('Inserting game image before description');
         miniGame.insertBefore(imageEl, gameDescription);
       } else {
         // Fallback: just append to miniGame
-        console.log('Appending game image to mini game container (fallback)');
         miniGame.appendChild(imageEl);
       }
     } catch (error) {
       console.error("Error inserting game image:", error);
       // Fallback: just append to miniGame
-      console.log('Error while inserting image, using fallback');
       miniGame.appendChild(imageEl);
     }
-  } else {
-    console.log('Game image container already exists');
   }
 
-  // Create game buttons with safe event handling
-  game.options.forEach((option, index) => {
+  // Create game buttons
+  game.options.forEach(option => {
       const button = document.createElement('button');
       button.classList.add('game-btn');
       button.textContent = option.text;
-      
-      console.log(`Created button ${index + 1}: ${option.text}`);
 
-      // Use a single click handler function for better cleanup
+      // Use a single click handler function
       const clickHandler = () => {
-          console.log(`Mini-game button clicked: ${option.text}`);
-          
           // Remove the event listener first to prevent double-triggers
           button.removeEventListener('click', clickHandler);
           
           // Execute the result and continue
           try {
-              console.log(`Executing result for option: ${option.text}`);
               option.result();
           } catch (error) {
               console.error('Error in mini-game option result:', error);
           }
           
           hideMiniGame();
-          console.log('Mini-game hidden after button click');
           
-          // Return to previous deck with timeout for consistency
+          // Return to previous deck immediately
           if (gameState.getPreviousDeck()) {
               const prevDeck = gameState.getPreviousDeck();
-              console.log(`Preparing to return to previous deck: ${prevDeck}`);
               gameState.setPreviousDeck(null);
-              
-              // Use consistent timeout for returning from mini-games
-              setTimeout(() => {
-                  console.log(`Switching back to deck: ${prevDeck} after mini-game`);
-                  switchDeck(prevDeck);
-              }, 100);
+              switchDeck(prevDeck);
           }
       };
 
@@ -679,7 +608,6 @@ function showMiniGame(gameId) {
       gameButtons.appendChild(button);
   });
 
-  console.log(`Showing mini-game UI for: ${gameId}`);
   miniGame.classList.add('show');
 }
 

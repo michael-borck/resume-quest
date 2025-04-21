@@ -69,13 +69,8 @@ export const cardDecks = {
       rightResult: function () {
         console.log("Values & Interests selected");
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for personal values");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing personal values mini-game");
-          showMiniGameFn("personalValues");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("personalValues");
       },
     },
   ],
@@ -98,13 +93,8 @@ export const cardDecks = {
         addSkillFn("CI/CD");
         increaseStatsFn(1, 1, 0);
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for deployment challenge");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing deployment challenge mini-game");
-          showMiniGameFn("deploymentChallenge");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("deploymentChallenge");
       },
     },
     {
@@ -144,13 +134,8 @@ export const cardDecks = {
         addSkillFn("Node.js");
         increaseStatsFn(1, 1, 0);
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for API challenge");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing API challenge mini-game");
-          showMiniGameFn("apiChallenge");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("apiChallenge");
       },
     },
     {
@@ -212,13 +197,8 @@ export const cardDecks = {
         addSkillFn("TensorFlow");
         increaseStatsFn(1, 0, 0);
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for ML challenge");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing ML challenge mini-game");
-          showMiniGameFn("skillAssessment");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("skillAssessment");
       },
     },
     {
@@ -279,13 +259,8 @@ export const cardDecks = {
         addSkillFn("UI/UX");
         increaseStatsFn(1, 0, 1);
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for ecommerce feature");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing ecommerce feature mini-game");
-          showMiniGameFn("ecommerceFeature");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("ecommerceFeature");
       },
     },
     {
@@ -320,13 +295,8 @@ export const cardDecks = {
         addSkillFn("Python");
         increaseStatsFn(1, 0, 0);
         
-        // Use consistent timeout for mini-game transitions across all devices
-        console.log("Starting mini-game transition for AI challenge");
-        // Use a slightly longer timeout for more reliability across devices
-        setTimeout(() => {
-          console.log("Showing ecommerce feature as AI challenge mini-game");
-          showMiniGameFn("ecommerceFeature");
-        }, 150);
+        // Show the mini-game immediately
+        showMiniGameFn("ecommerceFeature");
       },
       rightResult: function () {
         addSkillFn("Product Design");
@@ -350,11 +320,8 @@ export const cardDecks = {
           .querySelectorAll(".card")
           .forEach((c) => c.classList.add("temp-card"));
         // Switch to main deck after showing achievement
-        // Use consistent timeout for navigation across all devices
-        console.log("Starting main deck transition");
-        // Maintain the longer timeout for better user experience when showing achievement 
+        // Keep a small delay so users can see the notification
         setTimeout(() => {
-          console.log("Switching to main deck after achievement");
           switchDeckFn("main");
         }, 2000);
       },
