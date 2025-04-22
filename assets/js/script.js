@@ -182,17 +182,11 @@ function setupCardDragHandlers(card, cardData) {
         handleCardChoice(false);
     }
     
-    // Add click handlers for the left and right choices
-    const leftChoice = card.querySelector('.choice-left');
-    const rightChoice = card.querySelector('.choice-right');
-    
-    // Set up click handlers - IMPORTANT: These button clicks must trigger the exact 
-    // same functions and logic path as the swipe/drag handlers
-    leftChoice.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent card click event
-        console.log(`Left choice clicked on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
+    // Define shared handlers for both click and swipe
+    function handleLeftAction() {
+        console.log(`Left action on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
         
-        // Directly execute the card's leftResult function to match what swipe does
+        // Directly execute the card's leftResult function
         const resultFunction = cardData.leftResult;
         
         // Clean up and remove card
@@ -212,7 +206,7 @@ function setupCardDragHandlers(card, cardData) {
             gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
         }
         
-        // Execute the same result function that swipe would use
+        // Execute the result function
         resultFunction();
         gameState.decrementCardsLeft();
         updateStats();
@@ -230,13 +224,12 @@ function setupCardDragHandlers(card, cardData) {
                 createCard(gameState.getCurrentCardIndex());
             }
         }
-    });
+    }
     
-    rightChoice.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent card click event
-        console.log(`Right choice clicked on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
+    function handleRightAction() {
+        console.log(`Right action on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
         
-        // Directly execute the card's rightResult function to match what swipe does
+        // Directly execute the card's rightResult function
         const resultFunction = cardData.rightResult;
         
         // Clean up and remove card
@@ -256,7 +249,7 @@ function setupCardDragHandlers(card, cardData) {
             gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
         }
         
-        // Execute the same result function that swipe would use
+        // Execute the result function
         resultFunction();
         gameState.decrementCardsLeft();
         updateStats();
@@ -274,6 +267,21 @@ function setupCardDragHandlers(card, cardData) {
                 createCard(gameState.getCurrentCardIndex());
             }
         }
+    }
+    
+    // Add click handlers for the left and right choices
+    const leftChoice = card.querySelector('.choice-left');
+    const rightChoice = card.querySelector('.choice-right');
+    
+    // Set up click handlers using the shared functions
+    leftChoice.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent card click event
+        handleLeftAction();
+    });
+    
+    rightChoice.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent card click event
+        handleRightAction();
     });
     
     // Set up drag handlers (which will use the same choice functions)
@@ -354,89 +362,11 @@ function setupCardDragHandlers(card, cardData) {
         swipeRight.style.opacity = '0';
         
         if (diffX < -100) {
-            // LEFT SWIPE - directly duplicate the left button click logic
-            console.log(`Left swipe on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
-            
-            // Directly execute the card's leftResult function
-            const resultFunction = cardData.leftResult;
-            
-            // Clean up and remove card
-            cleanupEventListeners();
-            card.remove();
-            
-            // Special handling for main card
-            if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-                switchDeck('professional');
-                gameState.decrementCardsLeft();
-                updateStats();
-                return;
-            }
-            
-            // Increment index before executing
-            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
-                gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
-            }
-            
-            // Execute the result function
-            resultFunction();
-            gameState.decrementCardsLeft();
-            updateStats();
-            
-            // Check if game should end
-            if (gameState.getCardsLeft() <= 0) {
-                showGameOver();
-                return;
-            }
-            
-            // If no transition happened, create next card
-            if (document.querySelectorAll('.card').length === 0 && 
-                document.querySelectorAll('.temp-card').length === 0) {
-                if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
-                    createCard(gameState.getCurrentCardIndex());
-                }
-            }
+            // LEFT SWIPE - use the same handler as left button click
+            handleLeftAction();
         } else if (diffX > 100) {
-            // RIGHT SWIPE - directly duplicate the right button click logic
-            console.log(`Right swipe on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
-            
-            // Directly execute the card's rightResult function
-            const resultFunction = cardData.rightResult;
-            
-            // Clean up and remove card
-            cleanupEventListeners();
-            card.remove();
-            
-            // Special handling for main card
-            if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-                switchDeck('personal');
-                gameState.decrementCardsLeft();
-                updateStats();
-                return;
-            }
-            
-            // Increment index before executing
-            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
-                gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
-            }
-            
-            // Execute the result function
-            resultFunction();
-            gameState.decrementCardsLeft();
-            updateStats();
-            
-            // Check if game should end
-            if (gameState.getCardsLeft() <= 0) {
-                showGameOver();
-                return;
-            }
-            
-            // If no transition happened, create next card
-            if (document.querySelectorAll('.card').length === 0 && 
-                document.querySelectorAll('.temp-card').length === 0) {
-                if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
-                    createCard(gameState.getCurrentCardIndex());
-                }
-            }
+            // RIGHT SWIPE - use the same handler as right button click
+            handleRightAction();
         } else {
             // Return to center
             card.style.transform = '';
