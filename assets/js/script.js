@@ -186,17 +186,94 @@ function setupCardDragHandlers(card, cardData) {
     const leftChoice = card.querySelector('.choice-left');
     const rightChoice = card.querySelector('.choice-right');
     
-    // Set up click handlers
+    // Set up click handlers - IMPORTANT: These button clicks must trigger the exact 
+    // same functions and logic path as the swipe/drag handlers
     leftChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Left choice clicked on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
-        handleLeftChoice();
+        
+        // Directly execute the card's leftResult function to match what swipe does
+        const resultFunction = cardData.leftResult;
+        
+        // Clean up and remove card
+        cleanupEventListeners();
+        card.remove();
+        
+        // Special handling for main card
+        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
+            switchDeck('professional');
+            gameState.decrementCardsLeft();
+            updateStats();
+            return;
+        }
+        
+        // Increment index before executing
+        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
+            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
+        }
+        
+        // Execute the same result function that swipe would use
+        resultFunction();
+        gameState.decrementCardsLeft();
+        updateStats();
+        
+        // Check if game should end
+        if (gameState.getCardsLeft() <= 0) {
+            showGameOver();
+            return;
+        }
+        
+        // If no transition happened, create next card
+        if (document.querySelectorAll('.card').length === 0 && 
+            document.querySelectorAll('.temp-card').length === 0) {
+            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
+                createCard(gameState.getCurrentCardIndex());
+            }
+        }
     });
     
     rightChoice.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent card click event
         console.log(`Right choice clicked on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
-        handleRightChoice();
+        
+        // Directly execute the card's rightResult function to match what swipe does
+        const resultFunction = cardData.rightResult;
+        
+        // Clean up and remove card
+        cleanupEventListeners();
+        card.remove();
+        
+        // Special handling for main card
+        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
+            switchDeck('personal');
+            gameState.decrementCardsLeft();
+            updateStats();
+            return;
+        }
+        
+        // Increment index before executing
+        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
+            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
+        }
+        
+        // Execute the same result function that swipe would use
+        resultFunction();
+        gameState.decrementCardsLeft();
+        updateStats();
+        
+        // Check if game should end
+        if (gameState.getCardsLeft() <= 0) {
+            showGameOver();
+            return;
+        }
+        
+        // If no transition happened, create next card
+        if (document.querySelectorAll('.card').length === 0 && 
+            document.querySelectorAll('.temp-card').length === 0) {
+            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
+                createCard(gameState.getCurrentCardIndex());
+            }
+        }
     });
     
     // Set up drag handlers (which will use the same choice functions)
@@ -277,11 +354,89 @@ function setupCardDragHandlers(card, cardData) {
         swipeRight.style.opacity = '0';
         
         if (diffX < -100) {
-            // Swipe left - use the same handler as click
-            handleLeftChoice();
+            // LEFT SWIPE - directly duplicate the left button click logic
+            console.log(`Left swipe on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
+            
+            // Directly execute the card's leftResult function
+            const resultFunction = cardData.leftResult;
+            
+            // Clean up and remove card
+            cleanupEventListeners();
+            card.remove();
+            
+            // Special handling for main card
+            if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
+                switchDeck('professional');
+                gameState.decrementCardsLeft();
+                updateStats();
+                return;
+            }
+            
+            // Increment index before executing
+            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
+                gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
+            }
+            
+            // Execute the result function
+            resultFunction();
+            gameState.decrementCardsLeft();
+            updateStats();
+            
+            // Check if game should end
+            if (gameState.getCardsLeft() <= 0) {
+                showGameOver();
+                return;
+            }
+            
+            // If no transition happened, create next card
+            if (document.querySelectorAll('.card').length === 0 && 
+                document.querySelectorAll('.temp-card').length === 0) {
+                if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
+                    createCard(gameState.getCurrentCardIndex());
+                }
+            }
         } else if (diffX > 100) {
-            // Swipe right - use the same handler as click
-            handleRightChoice();
+            // RIGHT SWIPE - directly duplicate the right button click logic
+            console.log(`Right swipe on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
+            
+            // Directly execute the card's rightResult function
+            const resultFunction = cardData.rightResult;
+            
+            // Clean up and remove card
+            cleanupEventListeners();
+            card.remove();
+            
+            // Special handling for main card
+            if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
+                switchDeck('personal');
+                gameState.decrementCardsLeft();
+                updateStats();
+                return;
+            }
+            
+            // Increment index before executing
+            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
+                gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
+            }
+            
+            // Execute the result function
+            resultFunction();
+            gameState.decrementCardsLeft();
+            updateStats();
+            
+            // Check if game should end
+            if (gameState.getCardsLeft() <= 0) {
+                showGameOver();
+                return;
+            }
+            
+            // If no transition happened, create next card
+            if (document.querySelectorAll('.card').length === 0 && 
+                document.querySelectorAll('.temp-card').length === 0) {
+                if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
+                    createCard(gameState.getCurrentCardIndex());
+                }
+            }
         } else {
             // Return to center
             card.style.transform = '';
