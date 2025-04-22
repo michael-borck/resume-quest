@@ -108,12 +108,12 @@ export const cardDecks = {
       leftResult: function () {
         addSkillFn("React");
         increaseStatsFn(1, 1, 0);
-        // Don't manipulate the index here - it's now handled in handleLeftChoice
+        // Index is handled automatically
       },
       rightResult: function () {
         addSkillFn("UX Design");
         increaseStatsFn(1, 1, 1);
-        // Don't manipulate the index here - it's now handled in handleRightChoice
+        // Index is handled automatically
       },
     },
     {
@@ -127,7 +127,7 @@ export const cardDecks = {
       leftResult: function () {
         addSkillFn("MongoDB");
         increaseStatsFn(1, 1, 0);
-        // Don't manipulate the index here - it's now handled in handleLeftChoice
+        // Index is handled automatically
       },
       rightResult: function () {
         console.log("API design selected - should show mini-game");

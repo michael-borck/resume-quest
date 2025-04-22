@@ -120,67 +120,7 @@ function setupCardDragHandlers(card, cardData) {
     console.log(`Setting up handlers for card: ${cardData.title}`);
     console.log(`Current deck: ${gameState.getCurrentDeck()}, Current index: ${gameState.getCurrentCardIndex()}`);
     
-    // Define a single function for handling card choices (both left and right)
-    // This is the core function that will be called by both click and swipe handlers
-    function handleCardChoice(isLeft) {
-        const choiceType = isLeft ? 'left' : 'right';
-        const resultFunction = isLeft ? cardData.leftResult : cardData.rightResult;
-        
-        console.log(`Executing ${choiceType} result for ${cardData.title}`);
-        
-        // Clean up and remove card
-        cleanupEventListeners();
-        card.remove();
-        
-        // Special handling for main card to ensure consistent behavior
-        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-            const targetDeck = isLeft ? 'professional' : 'personal';
-            console.log(`Special handling for main card ${choiceType} choice - going to ${targetDeck}`);
-            switchDeck(targetDeck);
-            gameState.decrementCardsLeft();
-            updateStats();
-            return;
-        }
-        
-        // Increment the currentCardIndex BEFORE executing the result
-        if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
-            gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
-            console.log(`Incremented index to ${gameState.getCurrentCardIndex()} before ${choiceType} result`);
-        }
-        
-        // Execute the result function
-        resultFunction();
-        gameState.decrementCardsLeft();
-        updateStats();
-        
-        // Check if game should end
-        if (gameState.getCardsLeft() <= 0) {
-            showGameOver();
-            return;
-        }
-        
-        // Debug after result
-        console.log(`After ${choiceType} result: Deck: ${gameState.getCurrentDeck()}, Index: ${gameState.getCurrentCardIndex()}`);
-        
-        // If no transition happened in the result function, create next card
-        // Skip if we've marked cards as temp (used for cards that handle their own transitions)
-        if (document.querySelectorAll('.card').length === 0 && 
-            document.querySelectorAll('.temp-card').length === 0) {
-            console.log(`No cards found after ${choiceType} result - creating next card`);
-            if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length) {
-                createCard(gameState.getCurrentCardIndex());
-            }
-        }
-    }
-    
-    // Convenience functions to make code clearer
-    function handleLeftChoice() {
-        handleCardChoice(true);
-    }
-    
-    function handleRightChoice() {
-        handleCardChoice(false);
-    }
+    // All card choice handling is now done by handleLeftAction and handleRightAction
     
     // Define shared handlers for both click and swipe - simplified to rely on the card's result functions
     function handleLeftAction() {
