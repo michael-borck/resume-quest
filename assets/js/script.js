@@ -182,32 +182,23 @@ function setupCardDragHandlers(card, cardData) {
         handleCardChoice(false);
     }
     
-    // Define shared handlers for both click and swipe
+    // Define shared handlers for both click and swipe - simplified to rely on the card's result functions
     function handleLeftAction() {
         console.log(`Left action on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
-        
-        // Directly execute the card's leftResult function
-        const resultFunction = cardData.leftResult;
         
         // Clean up and remove card
         cleanupEventListeners();
         card.remove();
-        
-        // Special handling for main card
-        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-            switchDeck('professional');
-            gameState.decrementCardsLeft();
-            updateStats();
-            return;
-        }
         
         // Increment index before executing
         if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
             gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
         }
         
-        // Execute the result function
-        resultFunction();
+        // Execute the card's leftResult function - this is where the path is defined
+        cardData.leftResult();
+        
+        // Update game state
         gameState.decrementCardsLeft();
         updateStats();
         
@@ -229,28 +220,19 @@ function setupCardDragHandlers(card, cardData) {
     function handleRightAction() {
         console.log(`Right action on ${cardData.title} in ${gameState.getCurrentDeck()} deck`);
         
-        // Directly execute the card's rightResult function
-        const resultFunction = cardData.rightResult;
-        
         // Clean up and remove card
         cleanupEventListeners();
         card.remove();
-        
-        // Special handling for main card
-        if (gameState.getCurrentDeck() === 'main' && cardData.title === 'Choose Your Path') {
-            switchDeck('personal');
-            gameState.decrementCardsLeft();
-            updateStats();
-            return;
-        }
         
         // Increment index before executing
         if (gameState.getCurrentCardIndex() < cardDecks[gameState.getCurrentDeck()].length - 1) {
             gameState.setCurrentCardIndex(gameState.getCurrentCardIndex() + 1);
         }
         
-        // Execute the result function
-        resultFunction();
+        // Execute the card's rightResult function - this is where the path is defined
+        cardData.rightResult();
+        
+        // Update game state
         gameState.decrementCardsLeft();
         updateStats();
         
