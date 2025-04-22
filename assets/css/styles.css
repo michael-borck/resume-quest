@@ -127,19 +127,19 @@ body {
     width: 20px;
     height: 20px;
     margin-right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.deck-icon.work {
-    background-color: var(--work-color);
+.deck-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-.deck-icon.education {
-    background-color: var(--education-color);
-}
-
-.deck-icon.projects {
-    background-color: var(--projects-color);
-}
+/* Deck icon backgrounds removed as we're using images now */
 
 .stats-bar {
     display: flex;
@@ -351,16 +351,20 @@ body {
     height: 24px;
     background-color: #222;
     border: 1px solid var(--primary-color);
-    font-size: 12px; /* Increased from 6px for better visibility */
-    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
     text-align: center;
     padding: 2px;
     animation: pickup 0.5s;
     margin-right: 2px;
+    overflow: hidden;
+}
+
+.skill-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 @keyframes pickup {
@@ -496,9 +500,7 @@ body {
 }
 
 /* Additional styles for personal path elements */
-.deck-icon.personal {
-    background-color: var(--secondary-color);
-}
+/* Personal deck icon background removed as we're using images now */
 
 /* Help button and screen styling */
 .header-buttons {
@@ -812,7 +814,6 @@ body {
   .skill-item {
     width: 20px;
     height: 20px;
-    font-size: 9px;
     margin: 2px;
   }
   
@@ -953,7 +954,6 @@ body {
   .skill-item {
     width: 16px;
     height: 16px;
-    font-size: 8px;
   }
 }
 

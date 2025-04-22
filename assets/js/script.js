@@ -422,34 +422,38 @@ function switchDeck(deckName) {
   createCard(0);
 }
 
+// Deck icon mapping
+const deckIconMap = {
+  'main': 'assets/img/icons/soft-skill-attributes/problem-solviong-light-bulb.png',
+  'professional': 'assets/img/icons/soft-skill-attributes/project-management-clipboard.png',
+  'personal': 'assets/img/icons/soft-skill-attributes/teamwork.png',
+  'work': 'assets/img/icons/development-methodologies/software-design.png',
+  'education': 'assets/img/icons/soft-skill-attributes/learning.png',
+  'projects': 'assets/img/icons/development-methodologies/open-source.png'
+};
+
 // Updated function to ensure proper deck name display
 function updateDeckInfo() {
   let deckDisplayName;
-  let iconClass = 'deck-icon';
-
+  
   switch(gameState.getCurrentDeck()) {
       case 'main':
           deckDisplayName = 'Main Path';
           break;
       case 'professional':
           deckDisplayName = 'Professional Path';
-          iconClass += ' work';
           break;
       case 'personal':
           deckDisplayName = 'Personal Path';
-          iconClass += ' personal';
           break;
       case 'work':
           deckDisplayName = 'Work Experience';
-          iconClass += ' work';
           break;
       case 'education':
           deckDisplayName = 'Education Path';
-          iconClass += ' education';
           break;
       case 'projects':
           deckDisplayName = 'Projects & Hobbies';
-          iconClass += ' projects';
           break;
       default:
           deckDisplayName = gameState.getCurrentDeck();
@@ -457,24 +461,81 @@ function updateDeckInfo() {
   }
 
   deckName.textContent = deckDisplayName;
-  currentDeckIcon.className = iconClass;
+  
+  // Update deck icon with image
+  const iconPath = deckIconMap[gameState.getCurrentDeck()] || deckIconMap['main'];
+  currentDeckIcon.innerHTML = `<img src="${iconPath}" alt="${deckDisplayName}" title="${deckDisplayName}">`;
 }
 
-// Add a skill to inventory - modified to show only first letter
+// Skill to icon mapping
+const skillIconMap = {
+  // Programming Languages
+  "JavaScript": "assets/img/icons/programming-languages/javascript.png",
+  "Python": "assets/img/icons/programming-languages/python.png",
+  "TypeScript": "assets/img/icons/programming-languages/typescript.png",
+  
+  // Frameworks & Libraries
+  "React": "assets/img/icons/framework-libraries/react.png",
+  "Node.js": "assets/img/icons/framework-libraries/node-js.png",
+  "Flutter": "assets/img/icons/framework-libraries/flutter.png",
+  "TensorFlow": "assets/img/icons/framework-libraries/tensorflow.png",
+  
+  // Databases
+  "MongoDB": "assets/img/icons/databases/mongodb.png",
+  
+  // Cloud & Infrastructure
+  "AWS": "assets/img/icons/cloud-infrastructure/aws.png",
+  "GCP": "assets/img/icons/cloud-infrastructure/gcp.png",
+  "CI/CD": "assets/img/icons/cloud-infrastructure/ci-cd-pipeline.png",
+  "Microservices": "assets/img/icons/cloud-infrastructure/microservices.png",
+  "Distributed Systems": "assets/img/icons/cloud-infrastructure/distributed-systems.png",
+  
+  // Web Technologies
+  "UI/UX": "assets/img/icons/design-ux/ui-ux.png",
+  "UX Design": "assets/img/icons/design-ux/ux.png",
+  "WebSockets": "assets/img/icons/web-technologies/web-sockets.png",
+  "API": "assets/img/icons/web-technologies/api.png",
+  
+  // Design & Visualization
+  "Data Viz": "assets/img/icons/design-ux/data-viz.png",
+  "Product Design": "assets/img/icons/design-ux/product-design.png",
+  
+  // Development Methodologies
+  "Algorithms": "assets/img/icons/development-methodologies/algorithms.png",
+  "Full-Stack": "assets/img/icons/development-methodologies/full-stack.png",
+  "Software Design": "assets/img/icons/development-methodologies/software-design.png",
+  "Open Source": "assets/img/icons/development-methodologies/open-source.png",
+  
+  // Soft Skills
+  "Leadership": "assets/img/icons/soft-skill-attributes/leadership.png",
+  "Teamwork": "assets/img/icons/soft-skill-attributes/teamwork.png",
+  "Problem Solving": "assets/img/icons/soft-skill-attributes/problem-solving-puzzle.png",
+  "Creativity": "assets/img/icons/soft-skill-attributes/creativity.png",
+  "Learning": "assets/img/icons/soft-skill-attributes/learning.png"
+};
+
+// Add a skill to inventory with icon
 function addSkill(skillName) {
   // Don't add duplicate skills or show notification if already acquired
   if (gameState.addSkill(skillName)) {
     const skillItem = document.createElement('div');
     skillItem.classList.add('skill-item');
-
-    // Use just the first letter as the badge content
-    skillItem.textContent = skillName.charAt(0);
-
+    
+    // Create an image element for the icon
+    const iconPath = skillIconMap[skillName] || `assets/img/icons/development-methodologies/software-design.png`;
+    const iconImg = document.createElement('img');
+    iconImg.src = iconPath;
+    iconImg.alt = skillName;
+    iconImg.title = skillName;
+    
+    // Add the image to the skill item
+    skillItem.appendChild(iconImg);
+    
     // Add a title attribute to show the full skill name on hover
     skillItem.title = skillName;
-
+    
     inventory.appendChild(skillItem);
-
+    
     showNotification(`Skill unlocked: ${skillName}!`);
   }
 }
