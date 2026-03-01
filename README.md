@@ -1,5 +1,9 @@
 # Resume Quest: The Interactive 8-Bit Resume Experience
 
+<!-- BADGES:START -->
+[![8-bit](https://img.shields.io/badge/-8--bit-blue?style=flat-square)](https://github.com/topics/8-bit) [![adventure](https://img.shields.io/badge/-adventure-blue?style=flat-square)](https://github.com/topics/adventure) [![css](https://img.shields.io/badge/-css-1572b6?style=flat-square)](https://github.com/topics/css) [![exploration](https://img.shields.io/badge/-exploration-blue?style=flat-square)](https://github.com/topics/exploration) [![game](https://img.shields.io/badge/-game-blue?style=flat-square)](https://github.com/topics/game) [![html](https://img.shields.io/badge/-html-e34f26?style=flat-square)](https://github.com/topics/html) [![interactive](https://img.shields.io/badge/-interactive-blue?style=flat-square)](https://github.com/topics/interactive) [![javascript](https://img.shields.io/badge/-javascript-f7df1e?style=flat-square)](https://github.com/topics/javascript) [![resume](https://img.shields.io/badge/-resume-00bcd4?style=flat-square)](https://github.com/topics/resume) [![retro-gaming](https://img.shields.io/badge/-retro--gaming-blue?style=flat-square)](https://github.com/topics/retro-gaming)
+<!-- BADGES:END -->
+
 **Description:**
 
 Step into Resume Quest, where your resume becomes an adventure! This interactive 8-bit style resume transforms my professional journey into an engaging card-based game inspired by classics like "Reigns."
